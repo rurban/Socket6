@@ -1,6 +1,6 @@
 Socket6
 
-$Id: README,v 1.5 2000/03/15 17:17:02 ume Exp $
+$Id: README,v 1.6 2000/03/17 22:18:45 ume Exp $
 
 1. Abstract
 
@@ -13,7 +13,7 @@ AF_INET6 are included.
 
 Extract archive file.
 Change current directory to Socket6-x.xx ("x.xx" is version number).
-Type "./configure" to create Makefile.
+Type "perl Makefile.PL" to create Makefile.
 Type "make" to build.
 Type "make install" to install.
 

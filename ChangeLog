@@ -1,3 +1,12 @@
+2000-03-18  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.05.
+
+	* Makefile.in: Provide a Makefile.PL that runs configure, so that
+	things can be done in the usual Perl way.
+
+		Pointed out by: Paul Schinder <schinder@pobox.com>
+
 2000-03-17  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.04.  I changed convention

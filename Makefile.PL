@@ -1,5 +1,3 @@
-# $Id: Makefile.in,v 1.3 2000/03/15 19:01:18 ume Exp $
-#
 # Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 # 
@@ -27,31 +25,28 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-PERL=	@PERLPATH@
+# $Id: Makefile.PL,v 1.2 2000/03/18 15:06:44 ume Exp $
 
-all:		blib/arch/auto/Socket6/Socket6.so
+use ExtUtils::MakeMaker;
 
-blib/arch/auto/Socket6/Socket6.so:	Makefile.go Socket6.pm Socket6.xs gai.h getaddrinfo.c getnameinfo.c
-	make -f Makefile.go
+my $path_perl;
+if ($^X =~ m!^/!o) {
+    $path_perl = $^X;
+} else {
+    $path_perl = `which $^X`;
+}
+my $cmd = './configure';
+$cmd .= " --with-perl=$path_perl" if ($path_perl);
+system($cmd);
+require 'config.pl';
 
-Makefile.go:	Makefile.PL
-	$(PERL) Makefile.PL
-
-Makefile.PL:	Makefile.PL.in configure config.h.in Makefile.in
-	./configure
-
-configure:	configure.in aclocal.m4
-	autoconf
-
-config.h.in:	acconfig.h
-	autoheader
-
-install:	Makefile.go
-	make -f Makefile.go install
-
-clean:		Makefile.go
-	make -f Makefile.go clean
-
-distclean:	clean
-	rm -f Makefile Makefile.PL Makefile.go.old config.cache	\
-		config.h config.log config.status gailookup.pl
+WriteMakefile(
+    NAME	 => 'Socket6',
+    VERSION_FROM => 'Socket6.pm',
+    MAN3PODS 	 => {},			# Pods will be built by installman.
+    XSPROTOARG	 => '-noprototypes',	# XXX remove later?
+    PM		 => {'Socket6.pm' => '$(INST_LIBDIR)/Socket6.pm'},
+    CC		 => "${cc}",
+    LIBS	 => ["${libs}"],
+    realclean	 => {FILES => 'config.cache config.h config.log config.pl config.status gailookup.pl'},
+);
