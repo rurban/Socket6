@@ -115,34 +115,43 @@ ac_tr_lib=HAVE_`echo $1 | sed -e 's/[^a-zA-Z0-9_]/_/g' \
 changequote([, ])dnl
 AC_CHECK_FUNC($1, [dnl
   AC_DEFINE_UNQUOTED($ac_tr_lib)
-  ac_cv_lib_inet6_$1=no], [dnl
-  AC_MSG_CHECKING([whether your system has IPv6 directory])
-  AC_CACHE_VAL(ipv6_cv_dir, [dnl
-    for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
-      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
-	break
-      fi
-    done])dnl
-  AC_MSG_RESULT($ipv6_cv_dir)
-  if test $ipv6_cv_dir = no; then
+  ac_cv_lib_socket_$1=no
+  ac_cv_lib_inet6_$1=no
+], [dnl
+  AC_CHECK_LIB(socket, $1, [dnl
+    AC_DEFINE_UNQUOTED($ac_tr_lib)
+    LIBS="$LIBS -lsocket"
     ac_cv_lib_inet6_$1=no
-  else
-    if test x$ipv6_libinet6 = x; then
-      ipv6_libinet6=no
-      SAVELDFLAGS="$LDFLAGS"
-      LDFLAGS="-L$ipv6_cv_dir/lib"
-    fi
-    AC_CHECK_LIB(inet6, $1, [dnl
-      AC_DEFINE_UNQUOTED($ac_tr_lib)
+  ], [dnl
+    AC_MSG_CHECKING([whether your system has IPv6 directory])
+    AC_CACHE_VAL(ipv6_cv_dir, [dnl
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+	if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	  break
+	fi
+      done])dnl
+    AC_MSG_RESULT($ipv6_cv_dir)
+    if test $ipv6_cv_dir = no; then
+      ac_cv_lib_inet6_$1=no
+    else
+      if test x$ipv6_libinet6 = x; then
+	ipv6_libinet6=no
+	SAVELDFLAGS="$LDFLAGS"
+	LDFLAGS="-L$ipv6_cv_dir/lib"
+      fi
+      AC_CHECK_LIB(inet6, $1, [dnl
+	AC_DEFINE_UNQUOTED($ac_tr_lib)
+	if test $ipv6_libinet6 = no; then
+	  ipv6_libinet6=yes
+	  LIBS="$LIBS -linet6"
+	fi],)dnl
       if test $ipv6_libinet6 = no; then
-	ipv6_libinet6=yes
-	LIBS="$LIBS -linet6"
-      fi],)dnl
-    if test $ipv6_libinet6 = no; then
-      LDFLAGS="$SAVELDFLAGS"
-    fi
-  fi])dnl
-if test $ac_cv_func_$1 = yes -o $ac_cv_lib_inet6_$1 = yes
+	LDFLAGS="$SAVELDFLAGS"
+      fi
+    fi])dnl
+])dnl
+if test $ac_cv_func_$1 = yes -o $ac_cv_lib_socket_$1 = yes \
+     -o $ac_cv_lib_inet6_$1 = yes
 then
   ipv6_cv_$1=yes
   ifelse([$2], , :, [$2])

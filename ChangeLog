@@ -1,3 +1,12 @@
+2001-03-21  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.09.
+
+	* aclocal.m4 (IPv6_CHECK_FUNC): There is getaddrinfo(3) in
+	libsocket under Solaris8.
+	Reported by:	Tomohide Nagashima <tomohide@japan-telecom.co.jp>,
+			TAKANO Yuji <takachan@running-dog.net>
+
 2001-01-26  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm:

@@ -36,7 +36,7 @@
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.08";
+$VERSION = "0.09";
 
 =head1 NAME
 
