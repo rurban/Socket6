@@ -1,3 +1,10 @@
+2001-01-26  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm:
+		- Fix typo in sample code.
+		  Reported by:	Matsumura Naoki <mat@pfu.co.jp>
+		- Bump version number to 0.08.
+	
 2000-05-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.07.

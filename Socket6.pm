@@ -36,7 +36,7 @@
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.07";
+$VERSION = "0.08";
 
 =head1 NAME
 
@@ -55,7 +55,7 @@ Socket6, sockaddr_in6, inet_pton, inet_ntop - load IPv6 related part of the C so
 	($host, $port) = getnameinfo($saddr, NI_NUMERICHOST | NI_NUMERICSERV);
 	print STDERR "Trying to connect to $host port port $port...\n";
 
-	socket(Socket_Handle, $family, $saddr, $proto) || next;
+	socket(Socket_Handle, $family, $socktype, $proto) || next;
         connect(Socket_Handle, $saddr) && last;
 
 	close(Socket_Handle);
