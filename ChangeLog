@@ -1,3 +1,15 @@
+2000-03-20  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.06.
+
+	* config.pl.in: config.pl did not return a true value at
+	Makefile.PL line 41.
+
+		Reported by:	Paul Schinder <schinder@pobox.com>
+
+	* config.pl.in: Don't use @PERLPATH@ and @CFLAGS@ values returns
+	from configure.
+
 2000-03-18  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.05.
