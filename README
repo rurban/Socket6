@@ -1,10 +1,10 @@
 Socket6
 
-$Id: README,v 1.6 2000/03/17 22:18:45 ume Exp $
+$Id: README,v 1.7 2000/05/27 08:21:37 ume Exp $
 
 1. Abstract
 
-This module support getaddrinfo() and getnameinfo() to intend to
+This module supports getaddrinfo() and getnameinfo() to intend to
 enable protocol independent programing.
 If your environment supports IPv6, IPv6 related defines such as
 AF_INET6 are included.

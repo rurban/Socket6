@@ -27,7 +27,7 @@
 ;# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;# SUCH DAMAGE.
 
-;# $Id: gailookup.pl.in,v 1.3 2000/03/14 12:55:47 ume Exp $
+;# $Id: gailookup.pl.in,v 1.5 2000/05/03 14:20:41 ume Exp $
 
 use Getopt::Std;
 use Socket;
@@ -37,15 +37,18 @@ use strict;
 my $inet6 = defined(eval 'PF_INET6');
 
 my %opt;
-getopts(($inet6 ? 'hpn46' : 'hpn4'), \%opt);
+getopts(($inet6 ? 'chpsn46' : 'chpsn4'), \%opt);
 
 if ($opt{'h'}){
-    print STDERR ("Usage: $0 [-h | [-n] [-p] [-4".($inet6 && "|-6")."] [host [serv]]]\n".
-		  "-h   : help\n".
-		  "-n   : AI_NUMERICHOST flag\n".
-		  "-p   : AI_PASSIVE flag\n".
-		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" :
-		   "-4   : PF_INET")."\n");
+    print STDERR ("Usage: $0 [-h | [-c] [-n] [-p] [-s] [-4" .
+		  ($inet6 && "|-6") . "] [host [serv]]]\n" .
+		  "-h   : help\n" .
+		  "-c   : AI_CANONNAME flag\n" .
+		  "-n   : AI_NUMERICHOST flag\n" .
+		  "-p   : AI_PASSIVE flag\n" .
+		  "-s   : NI_WITHSCOPEID flag\n" .
+		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" : "-4   : PF_INET") . 
+		  "\n");
     exit(4);
 }
 
@@ -61,12 +64,19 @@ $af = PF_INET6 if ($inet6 && $opt{'6'});
 my $flags = 0;
 $flags |= AI_PASSIVE if ($opt{'p'});
 $flags |= AI_NUMERICHOST if ($opt{'n'});
+$flags |= AI_CANONNAME if ($opt{'c'});
+
+my $nflags = NI_NUMERICHOST | NI_NUMERICSERV;
+$nflags |= NI_WITHSCOPEID if ($opt{'s'});
+
 
 my $socktype = SOCK_STREAM;
 my $protocol = 0;
 
 my @tmp = getaddrinfo($host, $serv, $af, $socktype, $protocol, $flags);
 while (my($family,$socktype,$protocol,$sin,$canonname) = splice(@tmp, $[, 5)){
-    my($addr, $port) = getnameinfo($sin, NI_NUMERICHOST | NI_NUMERICSERV);
-    print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port\n");
+    my($addr, $port) = getnameinfo($sin, $nflags);
+    print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port");
+    print(" canonname=$canonname") if ($opt{'c'});
+    print("\n");
 }

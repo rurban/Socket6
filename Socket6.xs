@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.7 2000/03/15 19:08:18 ume Exp $
+ * $Id: Socket6.xs,v 1.8 2000/05/27 07:44:14 ume Exp $
  *
  * Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -385,9 +385,9 @@ inet_pton(af, host)
 }
 
 void
-inet_ntop(af, ip6_address_sv)
+inet_ntop(af, address_sv)
 	int	af
-	SV *	ip6_address_sv
+	SV *	address_sv
 	CODE:
 {
 #ifdef HAVE_INET_NTOP
@@ -399,14 +399,31 @@ inet_ntop(af, ip6_address_sv)
 	struct in_addr addr;
 	char addr_str[16];
 #endif
-	char * ip6_address = SvPV(ip6_address_sv,addrlen);
-	if (addrlen != sizeof(addr)) {
-		croak("Bad arg length for %s, length is %d, should be %d",
-		      "Socket6::inet_ntop",
-		      addrlen, sizeof(addr));
+	char * address = SvPV(address_sv,addrlen);
+	int alen;
+
+	switch (af) {
+	case AF_INET:
+		alen = sizeof(struct in_addr);
+		break;
+#ifdef INET6_ADDRSTRLEN
+	case AF_INET6:
+		alen = sizeof(struct in6_addr);
+		break;
+#endif
+	default:
+		croak("Unsupported address family for %s, af is %d",
+		      "Socket6::inet_ntop", af);
 	}
 
-	Copy( ip6_address, &addr, sizeof addr, char );
+	/* with sanity check, just in case */
+	if (alen > sizeof(addr) || alen != addrlen) {
+		croak("Bad arg length for %s, length is %d, should be %d",
+		      "Socket6::inet_ntop",
+		      addrlen, alen);
+	}
+
+	Copy( address, &addr, sizeof addr, char );
 	addr_str[0] = 0;
 	inet_ntop(af, &addr, addr_str, sizeof addr_str);
 

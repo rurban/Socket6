@@ -1,7 +1,7 @@
 # Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 # 
-# This moduled is besed on perl5.005_55-v6-19990721 written by KAME
+# This module is besed on perl5.005_55-v6-19990721 written by KAME
 # Project.
 #
 # Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.9 2000/03/19 17:38:57 ume Exp $
+# $Id: Socket6.pm,v 1.13 2000/05/27 10:54:08 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.06";
+$VERSION = "0.07";
 
 =head1 NAME
 
@@ -44,21 +44,63 @@ Socket6, sockaddr_in6, inet_pton, inet_ntop - load IPv6 related part of the C so
 
 =head1 SYNOPSIS
 
+    use Socket;
     use Socket6;
 
-    ($family, $socktype, $proto, $sin) =
-	getaddrinfo('hishost.com', 'daytime', AF_UNSPEC, SOCK_STREAM);
-    socket(Socket_Handle, $family, $socktype, $proto);
-    connect(Socket_Handle, $sin);
+    @res = getaddrinfo('hishost.com', 'daytime', AF_UNSPEC, SOCK_STREAM);
+    $family = -1;
+    while (scalar(@res) >= 5) {
+	($family, $socktype, $proto, $saddr, $canonname, @res) = @res;
 
-    ($host, $port) = getnameinfo(getpeername(Socket_Handle));
+	($host, $port) = getnameinfo($saddr, NI_NUMERICHOST | NI_NUMERICSERV);
+	print STDERR "Trying to connect to $host port port $port...\n";
+
+	socket(Socket_Handle, $family, $saddr, $proto) || next;
+        connect(Socket_Handle, $saddr) && last;
+
+	close(Socket_Handle);
+	$family = -1;
+    }
+
+    if ($family != -1) {
+	print STDERR "connected to $host port port $port\n";
+    } else {
+	die "connect attempt failed\n";
+    }
 
 =head1 DESCRIPTION
 
-This module support getaddrinfo() and getnameinfo() to intend to
+This module supports getaddrinfo() and getnameinfo() to intend to
 enable protocol independent programing.
 If your environment supports IPv6, IPv6 related defines such as
 AF_INET6 are included.
+
+If you use Socket6 module, be sure to specify "use Socket" as well as
+"use Socket6".
+
+Functions supplied are:
+
+=item inet_pton AF HOST
+
+=item inet_ntop AF ADDR
+
+=item pack_sockaddr_in6 PORT ADDR
+
+=item pack_sockaddr_in6_all PORT FLOWINFO ADDR SCOPEID
+
+=item unpack_sockaddr_in6 NAME
+
+=item unpack_sockaddr_in6_all NAME
+
+=item gethostbyname2 HOSTNAME, SERVNAME 
+
+=item getaddrinfo HOSTNAME, SERVNAME, FAMILY, SOCKTYPE, PROTOCOL, FLAGS
+
+    Arguments from FAMILY to FLAGS are optional.
+
+=item getnameinfo NAME, FLAGS
+
+    FLAGS argument is optional.
 
 =over
 

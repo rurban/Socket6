@@ -25,16 +25,11 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.2 2000/03/18 15:06:44 ume Exp $
+# $Id: Makefile.PL,v 1.3 2000/04/15 07:26:44 ume Exp $
 
 use ExtUtils::MakeMaker;
 
-my $path_perl;
-if ($^X =~ m!^/!o) {
-    $path_perl = $^X;
-} else {
-    $path_perl = `which $^X`;
-}
+my $path_perl = ($^X =~ m!^/!o) ? $^X : `which $^X`;
 my $cmd = './configure';
 $cmd .= " --with-perl=$path_perl" if ($path_perl);
 system($cmd);

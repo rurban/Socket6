@@ -865,391 +865,15 @@ fi
 
 
 
-echo $ac_n "checking whether you have sa_len in struct sockaddr""... $ac_c" 1>&6
-echo "configure:870: checking whether you have sa_len in struct sockaddr" >&5
-cat > conftest.$ac_ext <<EOF
-#line 872 "configure"
-#include "confdefs.h"
-
-#include <sys/types.h>
-#include <sys/socket.h>
-
-int main() {
-
-struct sockaddr sa;
-int i = sa.sa_len;
-
-; return 0; }
-EOF
-if { (eval echo configure:885: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
-  rm -rf conftest*
-  	echo "$ac_t""yes" 1>&6
-	cat >> confdefs.h <<\EOF
-#define HAVE_SOCKADDR_SA_LEN 1
-EOF
-
-
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  	echo "$ac_t""no" 1>&6
-	:
-
-fi
-rm -f conftest*
-
-
-echo $ac_n "checking whether you have sin6_scope_id in struct sockaddr_in6""... $ac_c" 1>&6
-echo "configure:905: checking whether you have sin6_scope_id in struct sockaddr_in6" >&5
-cat > conftest.$ac_ext <<EOF
-#line 907 "configure"
-#include "confdefs.h"
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-int main() {
-
-struct sockaddr_in6 sin6;
-int i = sin6.sin6_scope_id; 
-
-; return 0; }
-EOF
-if { (eval echo configure:921: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
-  rm -rf conftest*
-  	echo "$ac_t""yes" 1>&6
-	cat >> confdefs.h <<\EOF
-#define HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID 1
-EOF
-
-
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  	echo "$ac_t""no" 1>&6
-	:
-
-fi
-rm -f conftest*
-
-
-for v6dir in /usr/local/v6 /usr/inet6; do
-	if test -d "$v6dir"; then
-		break
-	fi
-done
-
-
-echo $ac_n "checking for gethostbyname2""... $ac_c" 1>&6
-echo "configure:948: checking for gethostbyname2" >&5
-if eval "test \"`echo '$''{'ac_cv_func_gethostbyname2'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  cat > conftest.$ac_ext <<EOF
-#line 953 "configure"
-#include "confdefs.h"
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char gethostbyname2(); below.  */
-#include <assert.h>
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char gethostbyname2();
-
-int main() {
-
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined (__stub_gethostbyname2) || defined (__stub___gethostbyname2)
-choke me
-#else
-gethostbyname2();
-#endif
-
-; return 0; }
-EOF
-if { (eval echo configure:976: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_func_gethostbyname2=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_func_gethostbyname2=no"
-fi
-rm -f conftest*
-fi
-
-if eval "test \"`echo '$ac_cv_func_'gethostbyname2`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  cat >> confdefs.h <<\EOF
-#define HAVE_GETHOSTBYNAME2 1
-EOF
-
-else
-  echo "$ac_t""no" 1>&6
-
-
-LDFLAGS="-L$v6dir/lib"
-echo $ac_n "checking for gethostbyname2 in -linet6""... $ac_c" 1>&6
-echo "configure:1000: checking for gethostbyname2 in -linet6" >&5
-ac_lib_var=`echo inet6'_'gethostbyname2 | sed 'y%./+-%__p_%'`
-if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  ac_save_LIBS="$LIBS"
-LIBS="-linet6  $LIBS"
-cat > conftest.$ac_ext <<EOF
-#line 1008 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char gethostbyname2();
-
-int main() {
-gethostbyname2()
-; return 0; }
-EOF
-if { (eval echo configure:1019: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=no"
-fi
-rm -f conftest*
-LIBS="$ac_save_LIBS"
-
-fi
-if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  
-cat >> confdefs.h <<\EOF
-#define HAVE_GETHOSTBYNAME2 1
-EOF
-
-INET6LIBS="$LDFLAGS -linet6"
-else
-  echo "$ac_t""no" 1>&6
-fi
-
-fi
-
-
-echo $ac_n "checking for inet_pton""... $ac_c" 1>&6
-echo "configure:1048: checking for inet_pton" >&5
-if eval "test \"`echo '$''{'ac_cv_func_inet_pton'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  cat > conftest.$ac_ext <<EOF
-#line 1053 "configure"
-#include "confdefs.h"
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char inet_pton(); below.  */
-#include <assert.h>
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char inet_pton();
-
-int main() {
-
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined (__stub_inet_pton) || defined (__stub___inet_pton)
-choke me
-#else
-inet_pton();
-#endif
-
-; return 0; }
-EOF
-if { (eval echo configure:1076: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_func_inet_pton=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_func_inet_pton=no"
-fi
-rm -f conftest*
-fi
-
-if eval "test \"`echo '$ac_cv_func_'inet_pton`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  cat >> confdefs.h <<\EOF
-#define HAVE_INET_PTON 1
-EOF
-
-else
-  echo "$ac_t""no" 1>&6
-
-
-LDFLAGS="-L$v6dir/lib"
-echo $ac_n "checking for inet_pton in -linet6""... $ac_c" 1>&6
-echo "configure:1100: checking for inet_pton in -linet6" >&5
-ac_lib_var=`echo inet6'_'inet_pton | sed 'y%./+-%__p_%'`
-if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  ac_save_LIBS="$LIBS"
-LIBS="-linet6  $LIBS"
-cat > conftest.$ac_ext <<EOF
-#line 1108 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char inet_pton();
-
-int main() {
-inet_pton()
-; return 0; }
-EOF
-if { (eval echo configure:1119: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=no"
-fi
-rm -f conftest*
-LIBS="$ac_save_LIBS"
-
-fi
-if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  
-cat >> confdefs.h <<\EOF
-#define HAVE_INET_PTON 1
-EOF
-
-INET6LIBS="$LDFLAGS -linet6"
-else
-  echo "$ac_t""no" 1>&6
-fi
-
-fi
-
-
-echo $ac_n "checking for inet_ntop""... $ac_c" 1>&6
-echo "configure:1148: checking for inet_ntop" >&5
-if eval "test \"`echo '$''{'ac_cv_func_inet_ntop'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  cat > conftest.$ac_ext <<EOF
-#line 1153 "configure"
-#include "confdefs.h"
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char inet_ntop(); below.  */
-#include <assert.h>
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char inet_ntop();
-
-int main() {
-
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined (__stub_inet_ntop) || defined (__stub___inet_ntop)
-choke me
-#else
-inet_ntop();
-#endif
-
-; return 0; }
-EOF
-if { (eval echo configure:1176: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_func_inet_ntop=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_func_inet_ntop=no"
-fi
-rm -f conftest*
-fi
-
-if eval "test \"`echo '$ac_cv_func_'inet_ntop`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  cat >> confdefs.h <<\EOF
-#define HAVE_INET_NTOP 1
-EOF
-
-else
-  echo "$ac_t""no" 1>&6
-
-
-LDFLAGS="-L$v6dir/lib"
-echo $ac_n "checking for inet_ntop in -linet6""... $ac_c" 1>&6
-echo "configure:1200: checking for inet_ntop in -linet6" >&5
-ac_lib_var=`echo inet6'_'inet_ntop | sed 'y%./+-%__p_%'`
-if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
-else
-  ac_save_LIBS="$LIBS"
-LIBS="-linet6  $LIBS"
-cat > conftest.$ac_ext <<EOF
-#line 1208 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char inet_ntop();
-
-int main() {
-inet_ntop()
-; return 0; }
-EOF
-if { (eval echo configure:1219: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=yes"
-else
-  echo "configure: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  rm -rf conftest*
-  eval "ac_cv_lib_$ac_lib_var=no"
-fi
-rm -f conftest*
-LIBS="$ac_save_LIBS"
-
-fi
-if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
-  echo "$ac_t""yes" 1>&6
-  
-cat >> confdefs.h <<\EOF
-#define HAVE_INET_NTOP 1
-EOF
-
-INET6LIBS="$LDFLAGS -linet6"
-else
-  echo "$ac_t""no" 1>&6
-fi
-
-fi
-
-
+ac_tr_lib=HAVE_`echo getaddrinfo | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
 echo $ac_n "checking for getaddrinfo""... $ac_c" 1>&6
-echo "configure:1248: checking for getaddrinfo" >&5
+echo "configure:872: checking for getaddrinfo" >&5
 if eval "test \"`echo '$''{'ac_cv_func_getaddrinfo'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1253 "configure"
+#line 877 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char getaddrinfo(); below.  */
@@ -1272,7 +896,7 @@ getaddrinfo();
 
 ; return 0; }
 EOF
-if { (eval echo configure:1276: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:900: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func_getaddrinfo=yes"
 else
@@ -1286,17 +910,35 @@ fi
 
 if eval "test \"`echo '$ac_cv_func_'getaddrinfo`\" = yes"; then
   echo "$ac_t""yes" 1>&6
-  cat >> confdefs.h <<\EOF
-#define HAVE_GETADDRINFO 1
+    cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
 EOF
 
+  ac_cv_lib_inet6_getaddrinfo=no
 else
   echo "$ac_t""no" 1>&6
-
-
-LDFLAGS="-L$v6dir/lib"
-echo $ac_n "checking for getaddrinfo in -linet6""... $ac_c" 1>&6
-echo "configure:1300: checking for getaddrinfo in -linet6" >&5
+  echo $ac_n "checking whether your system has IPv6 directory""... $ac_c" 1>&6
+echo "configure:922: checking whether your system has IPv6 directory" >&5
+  if eval "test \"`echo '$''{'ipv6_cv_dir'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	break
+      fi
+    done
+fi
+  echo "$ac_t""$ipv6_cv_dir" 1>&6
+  if test $ipv6_cv_dir = no; then
+    ac_cv_lib_inet6_getaddrinfo=no
+  else
+    if test x$ipv6_libinet6 = x; then
+      ipv6_libinet6=no
+      SAVELDFLAGS="$LDFLAGS"
+      LDFLAGS="-L$ipv6_cv_dir/lib"
+    fi
+    echo $ac_n "checking for getaddrinfo in -linet6""... $ac_c" 1>&6
+echo "configure:942: checking for getaddrinfo in -linet6" >&5
 ac_lib_var=`echo inet6'_'getaddrinfo | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -1304,7 +946,7 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-linet6  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 1308 "configure"
+#line 950 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
@@ -1315,7 +957,7 @@ int main() {
 getaddrinfo()
 ; return 0; }
 EOF
-if { (eval echo configure:1319: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:961: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -1330,26 +972,40 @@ LIBS="$ac_save_LIBS"
 fi
 if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
   echo "$ac_t""yes" 1>&6
-  
-cat >> confdefs.h <<\EOF
-#define HAVE_GETADDRINFO 1
+        cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
 EOF
 
-INET6LIBS="$LDFLAGS -linet6"
+      if test $ipv6_libinet6 = no; then
+	ipv6_libinet6=yes
+	LIBS="$LIBS -linet6"
+      fi
 else
   echo "$ac_t""no" 1>&6
 fi
-
+    if test $ipv6_libinet6 = no; then
+      LDFLAGS="$SAVELDFLAGS"
+    fi
+  fi
+fi
+if test $ac_cv_func_getaddrinfo = yes -o $ac_cv_lib_inet6_getaddrinfo = yes
+then
+  ipv6_cv_getaddrinfo=yes
+  :
+else
+  ipv6_cv_getaddrinfo=no
+  :
 fi
 
-
+ac_tr_lib=HAVE_`echo getnameinfo | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
 echo $ac_n "checking for getnameinfo""... $ac_c" 1>&6
-echo "configure:1348: checking for getnameinfo" >&5
+echo "configure:1004: checking for getnameinfo" >&5
 if eval "test \"`echo '$''{'ac_cv_func_getnameinfo'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 1353 "configure"
+#line 1009 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
     which can conflict with char getnameinfo(); below.  */
@@ -1372,7 +1028,7 @@ getnameinfo();
 
 ; return 0; }
 EOF
-if { (eval echo configure:1376: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:1032: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_func_getnameinfo=yes"
 else
@@ -1386,17 +1042,35 @@ fi
 
 if eval "test \"`echo '$ac_cv_func_'getnameinfo`\" = yes"; then
   echo "$ac_t""yes" 1>&6
-  cat >> confdefs.h <<\EOF
-#define HAVE_GETNAMEINFO 1
+    cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
 EOF
 
+  ac_cv_lib_inet6_getnameinfo=no
 else
   echo "$ac_t""no" 1>&6
-
-
-LDFLAGS="-L$v6dir/lib"
-echo $ac_n "checking for getnameinfo in -linet6""... $ac_c" 1>&6
-echo "configure:1400: checking for getnameinfo in -linet6" >&5
+  echo $ac_n "checking whether your system has IPv6 directory""... $ac_c" 1>&6
+echo "configure:1054: checking whether your system has IPv6 directory" >&5
+  if eval "test \"`echo '$''{'ipv6_cv_dir'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	break
+      fi
+    done
+fi
+  echo "$ac_t""$ipv6_cv_dir" 1>&6
+  if test $ipv6_cv_dir = no; then
+    ac_cv_lib_inet6_getnameinfo=no
+  else
+    if test x$ipv6_libinet6 = x; then
+      ipv6_libinet6=no
+      SAVELDFLAGS="$LDFLAGS"
+      LDFLAGS="-L$ipv6_cv_dir/lib"
+    fi
+    echo $ac_n "checking for getnameinfo in -linet6""... $ac_c" 1>&6
+echo "configure:1074: checking for getnameinfo in -linet6" >&5
 ac_lib_var=`echo inet6'_'getnameinfo | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -1404,7 +1078,7 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-linet6  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 1408 "configure"
+#line 1082 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
@@ -1415,7 +1089,7 @@ int main() {
 getnameinfo()
 ; return 0; }
 EOF
-if { (eval echo configure:1419: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:1093: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -1430,18 +1104,502 @@ LIBS="$ac_save_LIBS"
 fi
 if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
   echo "$ac_t""yes" 1>&6
-  
-cat >> confdefs.h <<\EOF
-#define HAVE_GETNAMEINFO 1
+        cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
 EOF
 
-INET6LIBS="$LDFLAGS -linet6"
+      if test $ipv6_libinet6 = no; then
+	ipv6_libinet6=yes
+	LIBS="$LIBS -linet6"
+      fi
 else
   echo "$ac_t""no" 1>&6
 fi
-
+    if test $ipv6_libinet6 = no; then
+      LDFLAGS="$SAVELDFLAGS"
+    fi
+  fi
+fi
+if test $ac_cv_func_getnameinfo = yes -o $ac_cv_lib_inet6_getnameinfo = yes
+then
+  ipv6_cv_getnameinfo=yes
+  :
+else
+  ipv6_cv_getnameinfo=no
+  :
 fi
 
+ac_tr_lib=HAVE_`echo gethostbyname2 | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
+echo $ac_n "checking for gethostbyname2""... $ac_c" 1>&6
+echo "configure:1136: checking for gethostbyname2" >&5
+if eval "test \"`echo '$''{'ac_cv_func_gethostbyname2'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1141 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char gethostbyname2(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char gethostbyname2();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_gethostbyname2) || defined (__stub___gethostbyname2)
+choke me
+#else
+gethostbyname2();
+#endif
+
+; return 0; }
+EOF
+if { (eval echo configure:1164: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_func_gethostbyname2=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_func_gethostbyname2=no"
+fi
+rm -f conftest*
+fi
+
+if eval "test \"`echo '$ac_cv_func_'gethostbyname2`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+    cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+  ac_cv_lib_inet6_gethostbyname2=no
+else
+  echo "$ac_t""no" 1>&6
+  echo $ac_n "checking whether your system has IPv6 directory""... $ac_c" 1>&6
+echo "configure:1186: checking whether your system has IPv6 directory" >&5
+  if eval "test \"`echo '$''{'ipv6_cv_dir'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	break
+      fi
+    done
+fi
+  echo "$ac_t""$ipv6_cv_dir" 1>&6
+  if test $ipv6_cv_dir = no; then
+    ac_cv_lib_inet6_gethostbyname2=no
+  else
+    if test x$ipv6_libinet6 = x; then
+      ipv6_libinet6=no
+      SAVELDFLAGS="$LDFLAGS"
+      LDFLAGS="-L$ipv6_cv_dir/lib"
+    fi
+    echo $ac_n "checking for gethostbyname2 in -linet6""... $ac_c" 1>&6
+echo "configure:1206: checking for gethostbyname2 in -linet6" >&5
+ac_lib_var=`echo inet6'_'gethostbyname2 | sed 'y%./+-%__p_%'`
+if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  ac_save_LIBS="$LIBS"
+LIBS="-linet6  $LIBS"
+cat > conftest.$ac_ext <<EOF
+#line 1214 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char gethostbyname2();
+
+int main() {
+gethostbyname2()
+; return 0; }
+EOF
+if { (eval echo configure:1225: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=no"
+fi
+rm -f conftest*
+LIBS="$ac_save_LIBS"
+
+fi
+if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+        cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+      if test $ipv6_libinet6 = no; then
+	ipv6_libinet6=yes
+	LIBS="$LIBS -linet6"
+      fi
+else
+  echo "$ac_t""no" 1>&6
+fi
+    if test $ipv6_libinet6 = no; then
+      LDFLAGS="$SAVELDFLAGS"
+    fi
+  fi
+fi
+if test $ac_cv_func_gethostbyname2 = yes -o $ac_cv_lib_inet6_gethostbyname2 = yes
+then
+  ipv6_cv_gethostbyname2=yes
+  :
+else
+  ipv6_cv_gethostbyname2=no
+  :
+fi
+
+ac_tr_lib=HAVE_`echo inet_pton | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
+echo $ac_n "checking for inet_pton""... $ac_c" 1>&6
+echo "configure:1268: checking for inet_pton" >&5
+if eval "test \"`echo '$''{'ac_cv_func_inet_pton'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1273 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char inet_pton(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char inet_pton();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_inet_pton) || defined (__stub___inet_pton)
+choke me
+#else
+inet_pton();
+#endif
+
+; return 0; }
+EOF
+if { (eval echo configure:1296: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_func_inet_pton=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_func_inet_pton=no"
+fi
+rm -f conftest*
+fi
+
+if eval "test \"`echo '$ac_cv_func_'inet_pton`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+    cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+  ac_cv_lib_inet6_inet_pton=no
+else
+  echo "$ac_t""no" 1>&6
+  echo $ac_n "checking whether your system has IPv6 directory""... $ac_c" 1>&6
+echo "configure:1318: checking whether your system has IPv6 directory" >&5
+  if eval "test \"`echo '$''{'ipv6_cv_dir'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	break
+      fi
+    done
+fi
+  echo "$ac_t""$ipv6_cv_dir" 1>&6
+  if test $ipv6_cv_dir = no; then
+    ac_cv_lib_inet6_inet_pton=no
+  else
+    if test x$ipv6_libinet6 = x; then
+      ipv6_libinet6=no
+      SAVELDFLAGS="$LDFLAGS"
+      LDFLAGS="-L$ipv6_cv_dir/lib"
+    fi
+    echo $ac_n "checking for inet_pton in -linet6""... $ac_c" 1>&6
+echo "configure:1338: checking for inet_pton in -linet6" >&5
+ac_lib_var=`echo inet6'_'inet_pton | sed 'y%./+-%__p_%'`
+if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  ac_save_LIBS="$LIBS"
+LIBS="-linet6  $LIBS"
+cat > conftest.$ac_ext <<EOF
+#line 1346 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char inet_pton();
+
+int main() {
+inet_pton()
+; return 0; }
+EOF
+if { (eval echo configure:1357: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=no"
+fi
+rm -f conftest*
+LIBS="$ac_save_LIBS"
+
+fi
+if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+        cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+      if test $ipv6_libinet6 = no; then
+	ipv6_libinet6=yes
+	LIBS="$LIBS -linet6"
+      fi
+else
+  echo "$ac_t""no" 1>&6
+fi
+    if test $ipv6_libinet6 = no; then
+      LDFLAGS="$SAVELDFLAGS"
+    fi
+  fi
+fi
+if test $ac_cv_func_inet_pton = yes -o $ac_cv_lib_inet6_inet_pton = yes
+then
+  ipv6_cv_inet_pton=yes
+  :
+else
+  ipv6_cv_inet_pton=no
+  :
+fi
+
+ac_tr_lib=HAVE_`echo inet_ntop | sed -e 's/[^a-zA-Z0-9_]/_/g' \
+  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
+echo $ac_n "checking for inet_ntop""... $ac_c" 1>&6
+echo "configure:1400: checking for inet_ntop" >&5
+if eval "test \"`echo '$''{'ac_cv_func_inet_ntop'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1405 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char inet_ntop(); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char inet_ntop();
+
+int main() {
+
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_inet_ntop) || defined (__stub___inet_ntop)
+choke me
+#else
+inet_ntop();
+#endif
+
+; return 0; }
+EOF
+if { (eval echo configure:1428: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_func_inet_ntop=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_func_inet_ntop=no"
+fi
+rm -f conftest*
+fi
+
+if eval "test \"`echo '$ac_cv_func_'inet_ntop`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+    cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+  ac_cv_lib_inet6_inet_ntop=no
+else
+  echo "$ac_t""no" 1>&6
+  echo $ac_n "checking whether your system has IPv6 directory""... $ac_c" 1>&6
+echo "configure:1450: checking whether your system has IPv6 directory" >&5
+  if eval "test \"`echo '$''{'ipv6_cv_dir'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+      for ipv6_cv_dir in /usr/local/v6 /usr/inet6 no; do
+      if test $ipv6_cv_dir = no -o -d $ipv6_cv_dir; then
+	break
+      fi
+    done
+fi
+  echo "$ac_t""$ipv6_cv_dir" 1>&6
+  if test $ipv6_cv_dir = no; then
+    ac_cv_lib_inet6_inet_ntop=no
+  else
+    if test x$ipv6_libinet6 = x; then
+      ipv6_libinet6=no
+      SAVELDFLAGS="$LDFLAGS"
+      LDFLAGS="-L$ipv6_cv_dir/lib"
+    fi
+    echo $ac_n "checking for inet_ntop in -linet6""... $ac_c" 1>&6
+echo "configure:1470: checking for inet_ntop in -linet6" >&5
+ac_lib_var=`echo inet6'_'inet_ntop | sed 'y%./+-%__p_%'`
+if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  ac_save_LIBS="$LIBS"
+LIBS="-linet6  $LIBS"
+cat > conftest.$ac_ext <<EOF
+#line 1478 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char inet_ntop();
+
+int main() {
+inet_ntop()
+; return 0; }
+EOF
+if { (eval echo configure:1489: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=yes"
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  eval "ac_cv_lib_$ac_lib_var=no"
+fi
+rm -f conftest*
+LIBS="$ac_save_LIBS"
+
+fi
+if eval "test \"`echo '$ac_cv_lib_'$ac_lib_var`\" = yes"; then
+  echo "$ac_t""yes" 1>&6
+        cat >> confdefs.h <<EOF
+#define $ac_tr_lib 1
+EOF
+
+      if test $ipv6_libinet6 = no; then
+	ipv6_libinet6=yes
+	LIBS="$LIBS -linet6"
+      fi
+else
+  echo "$ac_t""no" 1>&6
+fi
+    if test $ipv6_libinet6 = no; then
+      LDFLAGS="$SAVELDFLAGS"
+    fi
+  fi
+fi
+if test $ac_cv_func_inet_ntop = yes -o $ac_cv_lib_inet6_inet_ntop = yes
+then
+  ipv6_cv_inet_ntop=yes
+  :
+else
+  ipv6_cv_inet_ntop=no
+  :
+fi
+
+if test $ac_cv_lib_inet6_getaddrinfo = yes; then
+	INET6LIBS="-L$ipv6_cv_dir/lib -linet6"
+fi
+
+
+echo $ac_n "checking whether you have sa_len in struct sockaddr""... $ac_c" 1>&6
+echo "configure:1535: checking whether you have sa_len in struct sockaddr" >&5
+if eval "test \"`echo '$''{'ipv6_cv_sa_len'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1540 "configure"
+#include "confdefs.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+int main() {
+struct sockaddr sa; int i = sa.sa_len;
+; return 0; }
+EOF
+if { (eval echo configure:1548: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  ipv6_cv_sa_len=yes
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  ipv6_cv_sa_len=no
+fi
+rm -f conftest*
+fi
+if test $ipv6_cv_sa_len = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_SOCKADDR_SA_LEN 1
+EOF
+
+else
+  :
+fi
+echo "$ac_t""$ipv6_cv_sa_len" 1>&6
+
+echo $ac_n "checking whether you have sin6_scope_id in struct sockaddr_in6""... $ac_c" 1>&6
+echo "configure:1570: checking whether you have sin6_scope_id in struct sockaddr_in6" >&5
+if eval "test \"`echo '$''{'ipv6_cv_sin6_scope_id'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 1575 "configure"
+#include "confdefs.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main() {
+struct sockaddr_in6 sin6; int i = sin6.sin6_scope_id;
+; return 0; }
+EOF
+if { (eval echo configure:1584: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+  rm -rf conftest*
+  ipv6_cv_sin6_scope_id=yes
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -rf conftest*
+  ipv6_cv_sin6_scope_id=no
+fi
+rm -f conftest*
+fi
+if test $ipv6_cv_sin6_scope_id = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID 1
+EOF
+
+else
+  :
+fi
+echo "$ac_t""$ipv6_cv_sin6_scope_id" 1>&6
 
 
 

@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.4 2000/03/10 12:30:30 ume Exp $
+ * $Id: getaddrinfo.c,v 1.6 2000/05/27 19:16:43 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -55,6 +55,10 @@ gai_strerror(int ecode)
 	return "no address associated with hostname.";
     case EAI_MEMORY:
 	return "memory allocation failure.";
+    case EAI_FAMILY:
+	return "ai_family not supported.";
+    case EAI_SERVICE:
+	return "servname not supported for ai_socktype.";
     default:
 	return "unknown error.";
     }
@@ -65,6 +69,8 @@ freeaddrinfo(struct addrinfo *ai)
 {
     struct addrinfo *next;
 
+    if (ai->ai_canonname)
+	free(ai->ai_canonname);
     do {
 	next = ai->ai_next;
 	free(ai);
@@ -79,6 +85,9 @@ getaddrinfo(const char *hostname, const char *servname,
     struct hostent *hp;
     int i, port = 0, socktype, proto;
     char *pe_proto;
+
+    if (hints && hints->ai_family != PF_INET && hints->ai_family != PF_UNSPEC)
+	return EAI_FAMILY;
 
     socktype = (hints && hints->ai_socktype) ? hints->ai_socktype
 					     : SOCK_STREAM;
@@ -137,20 +146,26 @@ getaddrinfo(const char *hostname, const char *servname,
 	    return EAI_MEMORY;
     if ((hp = gethostbyname(hostname)) &&
 	hp->h_name && hp->h_name[0] && hp->h_addr_list[0]) {
-	for (i = 0; hp->h_addr_list[i]; i++)
-	    if (cur = malloc_ai(port,
+	for (i = 0; hp->h_addr_list[i]; i++) {
+	    if ((cur = malloc_ai(port,
 				((struct in_addr *)hp->h_addr_list[i])->s_addr,
-				socktype, proto)) {
-		if (prev)
-		    prev->ai_next = cur;
-		else
-		    *res = cur;
-		prev = cur;
-	    } else {
+				socktype, proto)) == NULL) {
 		if (*res)
 		    freeaddrinfo(*res);
 		return EAI_MEMORY;
 	    }
+	    if (prev)
+		prev->ai_next = cur;
+	    else
+		*res = cur;
+	    prev = cur;
+	}
+	if (hints && hints->ai_flags & AI_CANONNAME && *res) {
+	    if (((*res)->ai_canonname = strdup(hp->h_name)) == NULL) {
+		freeaddrinfo(*res);
+		return EAI_MEMORY;
+	    }
+	}
 	return 0;
     }
     return EAI_NODATA;
