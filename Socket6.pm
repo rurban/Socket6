@@ -1,6 +1,3 @@
-# Socket6.pm
-# $Id: Socket6.pm,v 1.7 2000/03/17 08:15:06 ume Exp $
-#
 # Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 # 
@@ -34,10 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+# $Id: Socket6.pm,v 1.8 2000/03/17 22:18:45 ume Exp $
+
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.04";
+$VERSION = "0.05";
 
 =head1 NAME
 
