@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: gai.h,v 1.9 2004/01/04 10:35:30 ume Exp $
+ * $Id: gai.h,v 1.10 2005/03/28 08:57:03 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -28,6 +28,7 @@
 #define AI_PASSIVE	1
 #define AI_CANONNAME	2
 #define AI_NUMERICHOST	4
+#define AI_NUMERICSERV	8
 #define NI_NUMERICHOST	2
 #define NI_NAMEREQD	4
 #define NI_NUMERICSERV	8

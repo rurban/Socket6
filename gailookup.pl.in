@@ -1,6 +1,6 @@
 #! @PERLPATH@
 
-;# Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+;# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
 ;# All rights reserved.
 ;#
 ;# Copyright (C)2000 Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
@@ -30,7 +30,7 @@
 ;# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;# SUCH DAMAGE.
 
-;# $Id: gailookup.pl.in,v 1.10 2004/01/04 18:35:05 ume Exp $
+;# $Id: gailookup.pl.in,v 1.11 2005/03/28 08:57:03 ume Exp $
 
 use Getopt::Std;
 use Socket;
@@ -40,15 +40,16 @@ use strict;
 my $inet6 = defined(eval 'PF_INET6');
 
 my %opt;
-getopts(($inet6 ? 'achpsnS46' : 'chpsnS4'), \%opt);
+getopts(($inet6 ? 'achpsnNS46' : 'chpsnNS4'), \%opt);
 
 if ($opt{'h'}){
-    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-p] [-s] [-S] [-4" .
+    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-N] [-p] [-s] [-S] [-4" .
 		  ($inet6 && "|-6") . "] [host [serv]]]\n" .
 		  "-h   : help\n" .
 		  "-a   : AI_ADDRCONFIG flag\n" .
 		  "-c   : AI_CANONNAME flag\n" .
 		  "-n   : AI_NUMERICHOST flag\n" .
+		  "-N   : AI_NUMERICSERV flag\n" .
 		  "-p   : AI_PASSIVE flag\n" .
 		  "-s   : NI_WITHSCOPEID flag\n" .
 		  "-S   : suppress scopeid\n" .
@@ -70,6 +71,7 @@ my $flags = 0;
 eval('$flags |= AI_ADDRCONFIG') if ($opt{'a'});
 $flags |= AI_PASSIVE if ($opt{'p'});
 $flags |= AI_NUMERICHOST if ($opt{'n'});
+$flags |= AI_NUMERICSERV if ($opt{'N'});
 $flags |= AI_CANONNAME if ($opt{'c'});
 
 my $nflags = NI_NUMERICHOST | NI_NUMERICSERV;

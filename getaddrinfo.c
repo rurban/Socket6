@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.12 2004/01/04 10:35:30 ume Exp $
+ * $Id: getaddrinfo.c,v 1.13 2005/03/28 08:57:03 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -114,6 +114,8 @@ getaddrinfo(const char *hostname, const char *servname,
 	    struct servent *se;
 	    char *pe_proto;
 
+	    if (hints && hints->ai_flags & AI_NUMERICSERV)
+		    return EAI_NONAME;
 	    switch (socktype) {
 	    case SOCK_DGRAM:
 		pe_proto = "udp";

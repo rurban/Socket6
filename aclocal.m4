@@ -1,4 +1,4 @@
-dnl Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+dnl Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
 dnl All rights reserved.
 dnl
 dnl Redistribution and use in source and binary forms, with or without
@@ -25,11 +25,11 @@ dnl LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 dnl OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 dnl SUCH DAMAGE.
 
-dnl $Id: aclocal.m4,v 1.9 2004/03/23 08:05:02 ume Exp $
+dnl $Id: aclocal.m4,v 1.11 2005/03/28 08:04:28 ume Exp $
 
 dnl SOCKET6_CHECK_PL_SV_UNDEF(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND
 dnl                           [, PERL-PATH])
-AC_DEFUN(SOCKET6_CHECK_PL_SV_UNDEF, [
+AC_DEFUN([SOCKET6_CHECK_PL_SV_UNDEF], [
 AC_MSG_CHECKING([whether your Perl5 have PL_sv_undef])
 AC_CACHE_VAL(socket6_cv_pl_sv_undef,[
 rm -rf conftest
@@ -77,7 +77,7 @@ fi
 ])
 
 dnl IPv6_CHECK_SIN6_SCOPE_ID(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND)
-AC_DEFUN(IPv6_CHECK_SIN6_SCOPE_ID, [
+AC_DEFUN([IPv6_CHECK_SIN6_SCOPE_ID], [
 AC_MSG_CHECKING([whether you have sin6_scope_id in struct sockaddr_in6])
 AC_CACHE_VAL(ipv6_cv_sin6_scope_id, [dnl
 AC_TRY_COMPILE([#include <sys/types.h>
@@ -86,14 +86,14 @@ AC_TRY_COMPILE([#include <sys/types.h>
 	[struct sockaddr_in6 sin6; int i = sin6.sin6_scope_id;],
 	[ipv6_cv_sin6_scope_id=yes], [ipv6_cv_sin6_scope_id=no])])dnl
 if test $ipv6_cv_sin6_scope_id = yes; then
-  ifelse([$1], , AC_DEFINE(HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID), [$1])
+  ifelse([$1], , AC_DEFINE(HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID,[1],[Do we have a sin6_scope_id in struct sockaddr_in6?]), [$1])
 else
   ifelse([$2], , :, [$2])
 fi
 AC_MSG_RESULT($ipv6_cv_sin6_scope_id)])
 dnl
 dnl whether you have sa_len in struct sockaddr
-AC_DEFUN(IPv6_CHECK_SA_LEN, [
+AC_DEFUN([IPv6_CHECK_SA_LEN], [
 AC_MSG_CHECKING([whether you have sa_len in struct sockaddr])
 AC_CACHE_VAL(ipv6_cv_sa_len, [dnl
 AC_TRY_COMPILE([#include <sys/types.h>
@@ -101,25 +101,20 @@ AC_TRY_COMPILE([#include <sys/types.h>
 	       [struct sockaddr sa; int i = sa.sa_len;],
 	       [ipv6_cv_sa_len=yes], [ipv6_cv_sa_len=no])])dnl
 if test $ipv6_cv_sa_len = yes; then
-  ifelse([$1], , AC_DEFINE(HAVE_SOCKADDR_SA_LEN), [$1])
+  ifelse([$1], , AC_DEFINE(HAVE_SOCKADDR_SA_LEN,[1],[Does sockaddr have an sa_len?]), [$1])
 else
   ifelse([$2], , :, [$2])
 fi
 AC_MSG_RESULT($ipv6_cv_sa_len)])
 dnl
 dnl See whether we can use IPv6 related functions
-AC_DEFUN(IPv6_CHECK_FUNC, [
-changequote(, )dnl
-ac_tr_lib=HAVE_`echo $1 | sed -e 's/[^a-zA-Z0-9_]/_/g' \
-  -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'`
-changequote([, ])dnl
+AC_DEFUN([IPv6_CHECK_FUNC], [
+AH_TEMPLATE(AS_TR_CPP(HAVE_$1), [Define to 1 if you have the `]$1[' function.])
 AC_CHECK_FUNC($1, [dnl
-  AC_DEFINE_UNQUOTED($ac_tr_lib)
   ac_cv_lib_socket_$1=no
   ac_cv_lib_inet6_$1=no
 ], [dnl
   AC_CHECK_LIB(socket, $1, [dnl
-    AC_DEFINE_UNQUOTED($ac_tr_lib)
     LIBS="$LIBS -lsocket -lnsl"
     ac_cv_lib_inet6_$1=no
   ], [dnl
@@ -140,7 +135,6 @@ AC_CHECK_FUNC($1, [dnl
 	LDFLAGS="$LDFLAGS -L$ipv6_cv_dir/lib"
       fi
       AC_CHECK_LIB(inet6, $1, [dnl
-	AC_DEFINE_UNQUOTED($ac_tr_lib)
 	if test $ipv6_libinet6 = no; then
 	  ipv6_libinet6=yes
 	  LIBS="$LIBS -linet6"
@@ -162,7 +156,6 @@ if test $ipv6_cv_$1 = no; then
       AC_EGREP_HEADER(${ipv6_cv_pfx}$1, netdb.h,
 		      [AC_CHECK_FUNC(${ipv6_cv_pfx}$1)])
       if eval test X\$ac_cv_func_${ipv6_cv_pfx}$1 = Xyes; then
-	AC_DEFINE(HAVE_GETADDRINFO,[],[Do we have a getaddrinfo?])
 	ipv6_cv_$1=yes
 	break
       fi
@@ -170,13 +163,14 @@ if test $ipv6_cv_$1 = no; then
   fi
 fi
 if test $ipv6_cv_$1 = yes; then
+  AC_DEFINE_UNQUOTED(AS_TR_CPP(HAVE_$1))
   ifelse([$2], , :, [$2])
 else
   ifelse([$3], , :, [$3])
 fi])
 dnl
 dnl See whether sys/socket.h has socklen_t
-AC_DEFUN(IPv6_CHECK_SOCKLEN_T, [
+AC_DEFUN([IPv6_CHECK_SOCKLEN_T], [
 AC_MSG_CHECKING(for socklen_t)
 AC_CACHE_VAL(ipv6_cv_socklen_t, [dnl
 AC_TRY_LINK([#include <sys/types.h>
@@ -184,7 +178,7 @@ AC_TRY_LINK([#include <sys/types.h>
 	    [socklen_t len = 0;],
 	    [ipv6_cv_socklen_t=yes], [ipv6_cv_socklen_t=no])])dnl
 if test $ipv6_cv_socklen_t = yes; then
-  ifelse([$1], , AC_DEFINE(HAVE_SOCKLEN_T), [$1])
+  ifelse([$1], , AC_DEFINE(HAVE_SOCKLEN_T,[1],[Do we have a socklen_t?]), [$1])
 else
   ifelse([$2], , :, [$2])
 fi

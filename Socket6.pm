@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # This module is besed on perl5.005_55-v6-19990721 written by KAME
@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.32 2004/03/24 06:42:39 ume Exp $
+# $Id: Socket6.pm,v 1.35 2005/03/28 14:22:25 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.17";
+$VERSION = "0.18";
 
 =head1 NAME
 
@@ -124,7 +124,7 @@ Functions supplied are:
     This function will croak if it determines it has not been
     passed an IPv6 structure.
 
-=item gethostbyname2 HOSTNAME, SERVNAME
+=item gethostbyname2 HOSTNAME, FAMILY
 
 =item getaddrinfo NODENAME, SERVICENAME, [FAMILY, SOCKTYPE, PROTOCOL, FLAGS]
 
@@ -218,6 +218,7 @@ require DynaLoader;
 	AI_ALL
 	AI_CANONNAME
 	AI_NUMERICHOST
+	AI_NUMERICSERV
 	AI_DEFAULT
 	AI_MASK
 	AI_PASSIVE

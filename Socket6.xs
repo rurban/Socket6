@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.22 2004/03/24 09:32:53 ume Exp $
+ * $Id: Socket6.xs,v 1.23 2005/03/28 08:57:03 ume Exp $
  *
- * Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
@@ -141,6 +141,12 @@ constant(char *name, int arg)
 	if (strEQ(name, "AI_NUMERICHOST"))
 #ifdef AI_NUMERICHOST
 	    return AI_NUMERICHOST;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "AI_NUMERICSERV"))
+#ifdef AI_NUMERICSERV
+	    return AI_NUMERICSERV;
 #else
 	    goto not_there;
 #endif
