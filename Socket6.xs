@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.9 2001/03/26 17:34:34 ume Exp $
+ * $Id: Socket6.xs,v 1.15 2001/09/17 17:34:28 ume Exp $
  *
- * Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
@@ -352,30 +352,23 @@ inet_pton(af, host)
 		struct in_addr addr4;
 	} ip_address;
 	int len;
-	struct hostent * phe;
 	int ok;
 
-	if (phe = gethostbyname2(host, af)) {
-		Copy( phe->h_addr, &ip_address, phe->h_length, char );
-		len = phe->h_length;
-		ok = 1;
-	} else {
-		switch (af) {
+	switch (af) {
 #ifdef INET6_ADDRSTRLEN
-		case AF_INET6:
-			len = sizeof(struct sockaddr_in6);
-			break;
+	case AF_INET6:
+		len = sizeof(struct in6_addr);
+		break;
 #endif
-		case AF_INET:
-			len = sizeof(struct sockaddr_in);
-			break;
-		default:
-	    		croak("Bad address family for %s, got %d",
-				"Socket6::inet_pton", af);
-			break;
-		}
-		ok = inet_pton(af, host, &ip_address);
+	case AF_INET:
+		len = sizeof(struct in_addr);
+		break;
+	default:
+		croak("Bad address family for %s, got %d",
+			"Socket6::inet_pton", af);
+		break;
 	}
+	ok = inet_pton(af, host, &ip_address);
 
 	ST(0) = sv_newmortal();
 	if (ok == 1) {
@@ -596,6 +589,7 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 	struct addrinfo hints, * res;
 	int	err;
 	int	count;
+	char	*error;
 
 	Zero( &hints, sizeof hints, char );
 	hints.ai_flags = flags;
@@ -623,6 +617,9 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 				PUSHs(&PL_sv_undef);
 		}
 		freeaddrinfo(res);
+	} else  {
+		error = gai_strerror(err);
+		PUSHs(sv_2mortal(newSVpv(error, strlen(error))));
 	}
 #else
 	ST(0) = (SV *) not_here("getaddrinfo");
@@ -655,9 +652,10 @@ getnameinfo(sin_sv, flags = 0)
 			err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 					  port, sizeof port,
 					  NI_NUMERICHOST|NI_NUMERICSERV);
-	} else
+	} else {
 		err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 				  port, sizeof port, flags);
+	}
 
 	if (err == 0) {
 		EXTEND(sp, 2);
@@ -666,5 +664,131 @@ getnameinfo(sin_sv, flags = 0)
 	}
 #else
 	ST(0) = (SV *) not_here("getnameinfo");
+#endif
+}
+
+char *
+gai_strerror(errcode = 0)
+	int	errcode;
+	CODE:
+	RETVAL = gai_strerror(errcode);
+	OUTPUT:
+	RETVAL
+
+void
+getipnodebyname(hostname, family=0, flags=0)
+	char *	hostname
+	int	family
+	int	flags
+	PREINIT:
+#ifdef HAVE_GETIPNODEBYNAME
+	struct hostent	*he;
+	int		err;
+	char		**p;
+	SV		*temp, *address_ref, *alias_ref;
+	AV		*address_list, *alias_list;
+#endif
+	PPCODE:
+{
+#ifdef HAVE_GETIPNODEBYNAME
+	he = getipnodebyname(hostname, family, flags, &err);
+
+	if (err == 0) {
+		XPUSHs(sv_2mortal(newSVpv(he->h_name, strlen(he->h_name))));
+		XPUSHs(sv_2mortal(newSViv(he->h_addrtype)));
+		XPUSHs(sv_2mortal(newSViv(he->h_length)));
+
+		address_list = newAV();
+		for(p = he->h_addr_list; *p != NULL; p++) {
+			temp = newSVpv(*p, he->h_length);
+			av_push(address_list, temp);
+		}
+		address_ref = newRV_noinc((SV*) address_list);
+		XPUSHs(address_ref);
+
+		alias_list = newAV();
+		for(p = he->h_aliases; *p != NULL; p++) {
+			temp = newSVpv(*p, strlen(*p));
+			av_push(alias_list, temp);
+		}
+		alias_ref = newRV_noinc((SV*) alias_list);
+		XPUSHs(alias_ref);
+		freehostent(he);
+	} else {
+		XPUSHs(sv_2mortal(newSViv(err)));
+	}
+#else
+	ST(0) = (SV *) not_here("getipnodebyname");
+#endif
+}
+
+void
+getipnodebyaddr(family, address_sv)
+	int	family
+	SV *	address_sv
+	PREINIT:
+#ifdef HAVE_GETIPNODEBYADDR
+	STRLEN		addrlen;
+	struct hostent	*he;
+	int		err, alen;
+	char		**p;
+	SV		*temp, *address_ref, *alias_ref;
+	AV		*address_list, *alias_list;
+	struct in6_addr	addr;
+	char		*addr_buffer;
+#endif
+	PPCODE:
+{
+#ifdef HAVE_GETIPNODEBYADDR
+	addr_buffer = SvPV(address_sv, addrlen);
+
+	switch(family) {
+
+	case AF_INET:
+		alen = sizeof(struct in_addr);
+		break;
+	case AF_INET6:
+		alen = sizeof(struct in6_addr);
+		break;
+	default:
+		croak("Unsupported address family for %s, af is %d",
+		    "Socket6::getipnodebyaddr", family);
+	}
+
+	if (alen > sizeof(addr) || alen != addrlen) {
+		croak("Arg length mismatch in %s, length is %d, should be %d\n",
+		    "Socket6::getipnodebyaddr", addrlen, alen);
+	}
+
+	Copy(addr_buffer, &addr, sizeof(addr), char);
+
+	he = getipnodebyaddr(addr_buffer, alen, family, &err);
+
+	if (err == 0) {
+		XPUSHs(sv_2mortal(newSVpv(he->h_name, strlen(he->h_name))));
+		XPUSHs(sv_2mortal(newSViv(he->h_addrtype)));
+		XPUSHs(sv_2mortal(newSViv(he->h_length)));
+
+		address_list = newAV();
+		for(p = he->h_addr_list; *p != NULL; p++) {
+			temp = newSVpv(*p, he->h_length);
+			av_push(address_list, temp);
+		}
+		address_ref = newRV_noinc((SV*) address_list);
+		XPUSHs(address_ref);
+
+		alias_list = newAV();
+		for(p = he->h_aliases; *p != NULL; p++) {
+			temp = newSVpv(*p, strlen(*p));
+			av_push(alias_list, temp);
+		}
+		alias_ref = newRV_noinc((SV*) alias_list);
+		XPUSHs(alias_ref);
+		freehostent(he);
+	} else {
+		XPUSHs(sv_2mortal(newSViv(err)));
+	}
+#else
+	ST(0) = (SV *) not_here("getipnodebyaddr");
 #endif
 }

@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getnameinfo.c,v 1.3 2000/03/09 19:31:23 ume Exp $
+ * $Id: getnameinfo.c,v 1.6 2001/09/17 15:36:36 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -22,8 +22,12 @@
 #include <string.h>
 #include "gai.h"
 
+#ifndef HAVE_SOCKLEN_T
+typedef unsigned int socklen_t;
+#endif /* HAVE_SOCKLEN_T */
+
 int
-getnameinfo(const struct sockaddr *sa, size_t salen,
+getnameinfo(const struct sockaddr *sa, socklen_t salen,
 	    char *host, size_t hostlen, char *serv, size_t servlen, int flags)
 {
     struct sockaddr_in *sin = (struct sockaddr_in *)sa;
@@ -37,18 +41,19 @@ getnameinfo(const struct sockaddr *sa, size_t salen,
 	else
 	    strcpy(serv, tmpserv);
     }
-    if (host)
-	if (flags & NI_NUMERICHOST)
-	    if (strlen(inet_ntoa(sin->sin_addr)) > hostlen)
+    if (host) {
+	if (flags & NI_NUMERICHOST) {
+	    if (strlen(inet_ntoa(sin->sin_addr)) >= hostlen)
 		return EAI_MEMORY;
 	    else {
 		strcpy(host, inet_ntoa(sin->sin_addr));
 		return 0;
 	    }
-	else
-	    if (hp = gethostbyaddr((char *)&sin->sin_addr,
-				   sizeof(struct in_addr), AF_INET))
-		if (strlen(hp->h_name) > hostlen)
+	} else {
+	    hp = gethostbyaddr((char *)&sin->sin_addr,
+			       sizeof(struct in_addr), AF_INET);
+	    if (hp)
+		if (strlen(hp->h_name) >= hostlen)
 		    return EAI_MEMORY;
 		else {
 		    strcpy(host, hp->h_name);
@@ -56,5 +61,7 @@ getnameinfo(const struct sockaddr *sa, size_t salen,
 		}
 	    else
 		return EAI_NODATA;
+	}
+    }
     return 0;
 }

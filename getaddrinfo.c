@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.6 2000/05/27 19:16:43 ume Exp $
+ * $Id: getaddrinfo.c,v 1.9 2001/09/17 15:21:49 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -27,8 +27,9 @@ malloc_ai(int port, u_long addr, int socktype, int proto)
 {
     struct addrinfo *ai;
 
-    if (ai = (struct addrinfo *)malloc(sizeof(struct addrinfo) +
-				       sizeof(struct sockaddr_in))) {
+    ai = (struct addrinfo *)malloc(sizeof(struct addrinfo) +
+				   sizeof(struct sockaddr_in));
+    if (ai) {
 	memset(ai, 0, sizeof(struct addrinfo) + sizeof(struct sockaddr_in));
 	ai->ai_addr = (struct sockaddr *)(ai + 1);
 	/* XXX -- ssh doesn't use sa_len */
@@ -74,7 +75,7 @@ freeaddrinfo(struct addrinfo *ai)
     do {
 	next = ai->ai_next;
 	free(ai);
-    } while (ai = next);
+    } while ((ai = next) != NULL);
 }
 
 int
@@ -83,8 +84,8 @@ getaddrinfo(const char *hostname, const char *servname,
 {
     struct addrinfo *cur, *prev = NULL;
     struct hostent *hp;
+    struct in_addr in;
     int i, port = 0, socktype, proto;
-    char *pe_proto;
 
     if (hints && hints->ai_family != PF_INET && hints->ai_family != PF_UNSPEC)
 	return EAI_FAMILY;
@@ -107,7 +108,7 @@ getaddrinfo(const char *hostname, const char *servname,
 	}
     }
     if (servname) {
-	if (isdigit(*servname))
+	if (isdigit((int)*servname))
 	    port = htons(atoi(servname));
 	else {
 	    struct servent *se;
@@ -129,21 +130,29 @@ getaddrinfo(const char *hostname, const char *servname,
 	    port = se->s_port;
 	}
     }
-    if (hints && hints->ai_flags & AI_PASSIVE)
-	if (*res = malloc_ai(port, htonl(0x00000000), socktype, proto))
+    if (hints && hints->ai_flags & AI_PASSIVE) {
+	*res = malloc_ai(port, htonl(0x00000000), socktype, proto);
+	if (*res)
 	    return 0;
 	else
 	    return EAI_MEMORY;
-    if (!hostname)
-	if (*res = malloc_ai(port, htonl(0x7f000001), socktype, proto))
+    }
+    if (!hostname) {
+	*res = malloc_ai(port, htonl(0x7f000001), socktype, proto);
+	if (*res)
 	    return 0;
 	else
 	    return EAI_MEMORY;
-    if (inet_addr(hostname) != -1)
-	if (*res = malloc_ai(port, inet_addr(hostname), socktype, proto))
+    }
+    if (inet_aton(hostname, &in)) {
+	*res = malloc_ai(port, in.s_addr, socktype, proto);
+	if (*res)
 	    return 0;
 	else
 	    return EAI_MEMORY;
+    }
+    if (hints && hints->ai_flags & AI_NUMERICHOST)
+	return EAI_NODATA;
     if ((hp = gethostbyname(hostname)) &&
 	hp->h_name && hp->h_name[0] && hp->h_addr_list[0]) {
 	for (i = 0; hp->h_addr_list[i]; i++) {

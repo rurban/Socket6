@@ -1,4 +1,4 @@
-# Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 # 
 # This module is besed on perl5.005_55-v6-19990721 written by KAME
@@ -31,16 +31,16 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.16 2001/03/26 17:34:34 ume Exp $
+# $Id: Socket6.pm,v 1.22 2001/09/17 16:06:37 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.10";
+$VERSION = "0.11";
 
 =head1 NAME
 
-Socket6, sockaddr_in6, inet_pton, inet_ntop - load IPv6 related part of the C socket.h defines and structure manipulators 
+Socket6 - IPv6 related part of the C socket.h defines and structure manipulators 
 
 =head1 SYNOPSIS
 
@@ -70,37 +70,129 @@ Socket6, sockaddr_in6, inet_pton, inet_ntop - load IPv6 related part of the C so
 
 =head1 DESCRIPTION
 
-This module supports getaddrinfo() and getnameinfo() to intend to
-enable protocol independent programing.
-If your environment supports IPv6, IPv6 related defines such as
-AF_INET6 are included.
+This module provides glue routines to the various IPv6 functions.
 
-If you use Socket6 module, be sure to specify "use Socket" as well as
-"use Socket6".
+If you use the Socket6 module,
+be sure to specify "use Socket" as well as "use Socket6".
 
 Functions supplied are:
 
-=item inet_pton AF HOST
+=item inet_pton FAMILY, TEXT_ADDRESS
 
-=item inet_ntop AF ADDR
+    This function takes an IP address in presentation (or string) format
+    and converts it into numeric (or binary) format.
+    The type of IP address conversion (IPv4 versus IPv6) is controlled
+    by the FAMILY argument.
 
-=item pack_sockaddr_in6 PORT ADDR
+=item inet_ntop FAMILY, BINARY_ADDRESS
 
-=item pack_sockaddr_in6_all PORT FLOWINFO ADDR SCOPEID
+    This function takes an IP address in numeric (or binary) format
+    and converts it into presentation (or string) format
+    The type of IP address conversion (IPv4 versus IPv6) is controlled
+    by the FAMILY argument.
+
+=item pack_sockaddr_in6 PORT, ADDR
+
+    This function takes two arguments: a port number, and a 16-octet
+    IPv6 address structure (as returned by inet_pton()).
+    It returns the sockaddr_in6 structure with these arguments packed
+    into their correct fields, as well as the AF_INET6 family.
+    The other fields are not set and their values should not be relied upon.
+
+=item pack_sockaddr_in6_all PORT, FLOWINFO, ADDR, SCOPEID
+
+    This function takes four arguments: a port number, a 16-octet
+    IPv6 address structure (as returned by inet_pton), any
+    special flow information, and any specific scope information.
+    It returns a complete sockaddr_in6 structure with these arguments packed
+    into their correct fields, as well as the AF_INET6 family.
 
 =item unpack_sockaddr_in6 NAME
 
+    This function takes a sockaddr_in6 structure (as returned by
+    pack_sockaddr_in6()) and returns a list of of two elements:
+    the port number and the 16-octet IP address.
+    This function will croak if it determines it has not been
+    passed an IPv6 structure.
+
 =item unpack_sockaddr_in6_all NAME
+
+    This function takes a sockaddr_in6 structure (as returned by
+    pack_sockaddr_in6()) and returns a list of of four elements:
+    the port number, the flow information, the 16-octet IP address,
+    and the scope information.
+    This function will croak if it determines it has not been
+    passed an IPv6 structure.
 
 =item gethostbyname2 HOSTNAME, SERVNAME 
 
-=item getaddrinfo HOSTNAME, SERVNAME, FAMILY, SOCKTYPE, PROTOCOL, FLAGS
+=item getaddrinfo NODENAME, SERVICENAME, [FAMILY, SOCKTYPE, PROTOCOL, FLAGS]
 
-    Arguments from FAMILY to FLAGS are optional.
+    This function converts node names to addresses and service names
+    to port numbers.
+    If the NODENAME argument is not a false value,
+    then a nodename to address lookup is performed;
+    otherwise a service name to port number lookup is performed.
+    At least one of NODENAME and SERVICENAME must have a true value.
 
-=item getnameinfo NAME, FLAGS
+    If the lookup is successful, a list consisting of multiples of
+    five elements is returned.
+    Each group of five elements consists of the address family,
+    socket type, protocol, 16-octet IP address, and the canonical
+    name (undef if the node name passed is already the canonical name).
 
-    FLAGS argument is optional.
+    The arguments FAMILY, SOCKTYPE, PROTOCOL, and FLAGS are all optional.
+
+    This function will croak if it determines it has not been
+    passed an IPv6 structure.
+    If the function returns an error value,
+    the string version of that error will be returned as a single scalar.
+
+=item getnameinfo NAME, [FLAGS]
+
+    This function takes a socket address structure and returns either
+    a node or service name.
+    The optional FLAGS argument controls what kind of lookup is performed.
+
+=item getipnodebyname HOST, [FAMILY, FLAGS]
+
+    This function takes either a node name or an IP address string
+    and performs a lookup on that name (or conversion of the string).
+    It returns a list of five elements: the canonical host name,
+    the address family, the length in octets of the IP addresses
+    returned, a reference to a list of IP address structures, and
+    a reference to a list of aliases for the host name.
+
+    The arguments FAMILY and FLAGS are optional.
+    Note: This function does not handle IPv6 scope identifiers,
+    and should be used with care.
+    The getnameinfo function should be used instead.
+
+=item getipnodebyaddr FAMILY, ADDRESS
+
+    This function takes an IP address family and an IP address structure
+    and performs a reverse lookup on that address.
+    It returns a list of five elements: the canonical host name,
+    the address family, the length in octets of the IP addresses
+    returned, a reference to a list of IP address structures, and
+    a reference to a list of aliases for the host name.
+
+    Note: This function does not handle IPv6 scope identifiers,
+    and should be used with care.
+    The getaddrinfo function should be used instead.
+
+=item gai_strerror ERROR_NUMBER
+
+    This function returns a string corresponding to the error number
+    passed in as an argument.
+
+=item inaddr6_any
+
+    This function returns the 16-octet wildcard address.
+
+=item inadd6_loopback
+
+    This function returns the 16-octet loopback address.
 
 =over
 
@@ -118,6 +210,7 @@ require DynaLoader;
 	unpack_sockaddr_in6 unpack_sockaddr_in6_all sockaddr_in6
 	gethostbyname2 getaddrinfo getnameinfo
 	in6addr_any in6addr_loopback
+	gai_strerror getipnodebyname getipnodebyaddr
 	AF_INET6
 	AI_ADDRCONFIG
 	AI_ALL

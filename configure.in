@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: configure.in,v 1.14 2000/04/15 07:25:37 ume Exp $
+# $Id: configure.in,v 1.16 2001/09/17 15:36:36 ume Exp $
 
 AC_INIT(Socket6.pm)
 AC_CONFIG_HEADER(config.h)
@@ -52,6 +52,8 @@ SOCKET6_CHECK_PL_SV_UNDEF(AC_DEFINE(HAVE_PL_SV_UNDEF), , $ac_cv_path_perl)
 IPv6_CHECK_FUNC(getaddrinfo)
 IPv6_CHECK_FUNC(getnameinfo)
 IPv6_CHECK_FUNC(gethostbyname2)
+IPv6_CHECK_FUNC(getipnodebyname)
+IPv6_CHECK_FUNC(getipnodebyaddr)
 IPv6_CHECK_FUNC(inet_pton)
 IPv6_CHECK_FUNC(inet_ntop)
 
@@ -61,6 +63,7 @@ fi
 
 IPv6_CHECK_SA_LEN()
 IPv6_CHECK_SIN6_SCOPE_ID()
+IPv6_CHECK_SOCKLEN_T()
 
 AC_SUBST(DEFINES)
 AC_SUBST(INET6LIBS)

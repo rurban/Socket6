@@ -1,7 +1,7 @@
 /*
- * $Id: acconfig.h,v 1.2 2000/03/15 19:08:18 ume Exp $
+ * $Id: acconfig.h,v 1.5 2001/09/17 16:06:37 ume Exp $
  *
- * Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,12 @@
 
 #undef HAVE_GETADDRINFO
 #undef HAVE_GETHOSTBYNAME2
+#undef HAVE_GETIPNODEBYADDR
+#undef HAVE_GETIPNODEBYNAME
 #undef HAVE_GETNAMEINFO
 #undef HAVE_INET_NTOP
 #undef HAVE_INET_PTON
 
 #undef HAVE_SOCKADDR_SA_LEN
 #undef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
+#undef HAVE_SOCKLEN_T
