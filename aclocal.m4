@@ -25,7 +25,7 @@ dnl LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 dnl OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 dnl SUCH DAMAGE.
 
-dnl $Id: aclocal.m4,v 1.7 2004/01/04 12:03:04 ume Exp $
+dnl $Id: aclocal.m4,v 1.8 2004/02/21 03:10:37 ume Exp $
 
 dnl SOCKET6_CHECK_PL_SV_UNDEF(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND
 dnl                           [, PERL-PATH])
@@ -120,7 +120,7 @@ AC_CHECK_FUNC($1, [dnl
 ], [dnl
   AC_CHECK_LIB(socket, $1, [dnl
     AC_DEFINE_UNQUOTED($ac_tr_lib)
-    LIBS="$LIBS -lsocket"
+    LIBS="$LIBS -lsocket -lnsl"
     ac_cv_lib_inet6_$1=no
   ], [dnl
     AC_MSG_CHECKING([whether your system has IPv6 directory])

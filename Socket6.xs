@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.16 2004/01/04 18:13:25 ume Exp $
+ * $Id: Socket6.xs,v 1.17 2004/01/04 19:10:10 ume Exp $
  *
- * Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME

@@ -1,3 +1,11 @@
+2004-02-21  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.15.
+
+	* aclocal.m4: inet_ntop and inet_pton are in libnsl on Solaris.
+
+	Submitted by:	Mike McCauley <mikem@open.com.au>
+
 2004-01-05  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.14.
