@@ -1,4 +1,4 @@
-dnl Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
+dnl Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
 dnl All rights reserved.
 dnl 
 dnl Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@ dnl LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 dnl OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 dnl SUCH DAMAGE.
 
-dnl $Id: aclocal.m4,v 1.4 2001/03/21 08:05:43 ume Exp $
+dnl $Id: aclocal.m4,v 1.7 2004/01/04 12:03:04 ume Exp $
 
 dnl SOCKET6_CHECK_PL_SV_UNDEF(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND
 dnl                           [, PERL-PATH])
@@ -137,7 +137,7 @@ AC_CHECK_FUNC($1, [dnl
       if test x$ipv6_libinet6 = x; then
 	ipv6_libinet6=no
 	SAVELDFLAGS="$LDFLAGS"
-	LDFLAGS="-L$ipv6_cv_dir/lib"
+	LDFLAGS="$LDFLAGS -L$ipv6_cv_dir/lib"
       fi
       AC_CHECK_LIB(inet6, $1, [dnl
 	AC_DEFINE_UNQUOTED($ac_tr_lib)
@@ -150,13 +150,28 @@ AC_CHECK_FUNC($1, [dnl
       fi
     fi])dnl
 ])dnl
+ipv6_cv_$1=no
 if test $ac_cv_func_$1 = yes -o $ac_cv_lib_socket_$1 = yes \
      -o $ac_cv_lib_inet6_$1 = yes
 then
   ipv6_cv_$1=yes
+fi
+if test $ipv6_cv_$1 = no; then
+  if test $1 = getaddrinfo; then
+    for ipv6_cv_pfx in o n; do
+      AC_EGREP_HEADER(${ipv6_cv_pfx}$1, netdb.h,
+		      [AC_CHECK_FUNC(${ipv6_cv_pfx}$1)])
+      if eval test X\$ac_cv_func_${ipv6_cv_pfx}$1 = Xyes; then
+	AC_DEFINE(HAVE_GETADDRINFO,[],[Do we have a getaddrinfo?])
+	ipv6_cv_$1=yes
+	break
+      fi
+    done
+  fi
+fi
+if test $ipv6_cv_$1 = yes; then
   ifelse([$2], , :, [$2])
 else
-  ipv6_cv_$1=no
   ifelse([$3], , :, [$3])
 fi])
 dnl

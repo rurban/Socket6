@@ -1,4 +1,20 @@
+2004-01-05  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.14.
+
+	* gailookup.pl.in: Though some systems has NI_WITHSCOPEID, RFC
+	2553 doesn't mention it, and RFC 3493 deprecated it.  So, make use
+	of NI_WITHSCOPEID optional.
+
+	* gailookup.pl.in: Add -S option which suppress scopeid.  RFC 3493
+	system always adds scopeid in a result of getnameinfo().
+
+	* Socket6.xs: Make pack_sockaddr_in6() and pack_sockaddr_in6_all()
+	actual work on systems which have sin6_len in struct sockaddr_in6.
+
 2004-01-04  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* aclocal.m4: getaddrinfo() is a macro on some systems.
 
 	* Socket6.pm: Bump version number to 0.13.
 

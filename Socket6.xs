@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.15 2001/09/17 17:34:28 ume Exp $
+ * $Id: Socket6.xs,v 1.16 2004/01/04 18:13:25 ume Exp $
  *
  * Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -438,6 +438,9 @@ pack_sockaddr_in6(port,ip6_address)
 	struct sockaddr_in6 sin;
 
 	Zero( &sin, sizeof sin, char );
+#ifdef SIN6_LEN
+	sin.sin6_len = sizeof sin;
+#endif
 	sin.sin6_family = AF_INET6;
 	sin.sin6_port = htons(port);
 	Copy( ip6_address, &sin.sin6_addr, sizeof sin.sin6_addr, char );
@@ -460,6 +463,9 @@ pack_sockaddr_in6_all(port,flowinfo,ip6_address,scope_id)
 	struct sockaddr_in6 sin;
 
 	Zero( &sin, sizeof sin, char );
+#ifdef SIN6_LEN
+	sin.sin6_len = sizeof sin;
+#endif
 	sin.sin6_family = AF_INET6;
 	sin.sin6_port = htons(port);
 	sin.sin6_flowinfo = htonl(flowinfo);

@@ -1,5 +1,8 @@
 #! @PERLPATH@
 
+;# Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+;# All rights reserved.
+;#
 ;# Copyright (C)2000 Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
 ;# All rights reserved.
 ;#
@@ -27,7 +30,7 @@
 ;# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;# SUCH DAMAGE.
 
-;# $Id: gailookup.pl.in,v 1.7 2001/09/17 15:43:54 ume Exp $
+;# $Id: gailookup.pl.in,v 1.10 2004/01/04 18:35:05 ume Exp $
 
 use Getopt::Std;
 use Socket;
@@ -37,10 +40,10 @@ use strict;
 my $inet6 = defined(eval 'PF_INET6');
 
 my %opt;
-getopts(($inet6 ? 'achpsn46' : 'chpsn4'), \%opt);
+getopts(($inet6 ? 'achpsnS46' : 'chpsnS4'), \%opt);
 
 if ($opt{'h'}){
-    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-p] [-s] [-4" .
+    print STDERR ("Usage: $0 [-h | [-a] [-c] [-n] [-p] [-s] [-S] [-4" .
 		  ($inet6 && "|-6") . "] [host [serv]]]\n" .
 		  "-h   : help\n" .
 		  "-a   : AI_ADDRCONFIG flag\n" .
@@ -48,6 +51,7 @@ if ($opt{'h'}){
 		  "-n   : AI_NUMERICHOST flag\n" .
 		  "-p   : AI_PASSIVE flag\n" .
 		  "-s   : NI_WITHSCOPEID flag\n" .
+		  "-S   : suppress scopeid\n" .
 		  ($inet6 ? "-4|-6: PF_INET | PF_INET6" : "-4   : PF_INET") . 
 		  "\n");
     exit(4);
@@ -69,7 +73,7 @@ $flags |= AI_NUMERICHOST if ($opt{'n'});
 $flags |= AI_CANONNAME if ($opt{'c'});
 
 my $nflags = NI_NUMERICHOST | NI_NUMERICSERV;
-$nflags |= NI_WITHSCOPEID if ($opt{'s'});
+eval('$nflags |= NI_WITHSCOPEID') if ($opt{'s'});
 
 
 my $socktype = SOCK_STREAM;
@@ -81,6 +85,10 @@ if ($#tmp < 1) {
     exit 1;
 }
 while (my($family,$socktype,$protocol,$sin,$canonname) = splice(@tmp, $[, 5)){
+    if ($opt{'S'} && $family == AF_INET6) {
+	my($port, $flowinfo, $addr, $scopeid) = unpack_sockaddr_in6_all($sin);
+	$sin = pack_sockaddr_in6_all($port, $flowinfo, $addr, 0);
+    }
     my($addr, $port) = getnameinfo($sin, $nflags);
     print("family=$family, socktype=$socktype, protocol=$protocol, addr=$addr, port=$port");
     print(" canonname=$canonname") if ($opt{'c'});

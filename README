@@ -1,6 +1,6 @@
 Socket6
 
-$Id: README,v 1.8 2001/09/17 16:06:37 ume Exp $
+$Id: README,v 1.9 2004/01/04 11:26:30 ume Exp $
 
 1. Abstract
 
@@ -30,7 +30,7 @@ Project and ssh-1.2.27-IPv6-1.5 was written by KIKUCHI Takahiro
 
 5. Copyright
 
-Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
+Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
 All rights reserved.
 
 Socket6.pm and Socket6.xs are based on perl5.005_55-v6-19990721
