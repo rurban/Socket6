@@ -1,0 +1,16 @@
+ChangeLog
+MANIFEST
+Makefile.PL.in
+Makefile.in
+README
+Socket6.pm
+Socket6.xs
+acconfig.h
+aclocal.m4
+config.h.in
+configure
+configure.in
+gai.h
+gailookup.pl.in
+getaddrinfo.c
+getnameinfo.c

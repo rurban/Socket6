@@ -1,0 +1,54 @@
+2000-03-17  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.04.  I changed convention
+	of version number to n.nn.
+
+2000-03-16  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* acconfig.h: Define HAVE_PL_SV_UNDEF rather than use of CFLAGS.
+
+	* Makefile.in: Added.  Now, ExtUtils::MakeMaker generates
+	Makefile.go.
+
+2000-03-14  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* configure.in: Use gcc if available.  Cannot compile with
+	traditional cc on some Linuxes due to illegal `const' definition:
+
+	        Debian GNU/Linux 2.1 (slink)  : glibc-2.0.7
+		Debian GNU/Linux 2.2 (potato) : glibc-2.1.3
+
+		Submitted by: Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
+
+	* gailookup.pl.in: Added.  Rule for finding Perl and --with-perl
+	option was also added to configure.in.
+
+		Submitted by: Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
+
+	* Socket6.xs: Add missing AI_NUMERICHOST.
+
+	* Makefile.PL.in: Pass CFLAGS to C compiler.
+
+	* configure.in: Separate functional blocks into aclocal.m4.
+
+2000-03-10  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6-0.3 is out.
+
+	* getaddrinfo.c (getaddrinfo): Avoid core dump when protocol is
+	not found in /etc/protocols or service is not found in
+	/etc/services.
+
+	* configure.in: Add check rule for PL_sv_undef.  Somewhat old
+	version of Perl5 uses sv_undef.
+
+	* configure.in: Add check rules for sa_len and sin6_scope_id.
+		Submitted by: Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
+
+	* acconfig.h: Added to be able to use autoheader.
+		Submitted by: Hideaki YOSHIFUJI <yoshfuji@ecei.tohoku.ac.jp>
+
+2000-03-09  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6-0.2 was released for evaluate.
+
