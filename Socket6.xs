@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.8 2000/05/27 07:44:14 ume Exp $
+ * $Id: Socket6.xs,v 1.9 2001/03/26 17:34:34 ume Exp $
  *
  * Copyright (C) 2000 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -45,7 +45,9 @@
 #include <netinet/in.h>
 #ifdef __KAME__
 # include <net/route.h>
-# include <netinet6/ipsec.h>
+# ifndef __OpenBSD__
+#  include <netinet6/ipsec.h>
+# endif
 #endif
 #include <netdb.h>
 

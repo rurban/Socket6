@@ -1,3 +1,11 @@
+2001-03-27  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.10.
+
+	* Socket6.xs: Make compilable under OpenBSD.  Though OpenBSD has
+	KAME, OpenBSD doesn't have netinet6/ipsec.h.
+	Reported by:	Tim Ayers <cpantest@quaday.com>
+
 2001-03-21  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.09.

@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.13 2000/05/27 10:54:08 ume Exp $
+# $Id: Socket6.pm,v 1.16 2001/03/26 17:34:34 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.09";
+$VERSION = "0.10";
 
 =head1 NAME
 
