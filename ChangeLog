@@ -1,3 +1,16 @@
+2004-01-04  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.13.
+
+	* getaddrinfo.c (getaddrinfo): EAI_NODATA was deprecated in RFC
+	3493.  return EAI_NONAME instead.
+
+	* getnameinfo.c (getnameinfo): add support for NI_NAMEREQD.
+
+2003-12-29  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* add simple test.
+
 2003-10-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Bump version number to 0.12.

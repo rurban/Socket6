@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getnameinfo.c,v 1.6 2001/09/17 15:36:36 ume Exp $
+ * $Id: getnameinfo.c,v 1.8 2004/01/04 10:13:44 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -35,7 +35,7 @@ getnameinfo(const struct sockaddr *sa, socklen_t salen,
     char tmpserv[16];
   
     if (serv) {
-	sprintf(tmpserv, "%d", ntohs(sin->sin_port));
+	snprintf(tmpserv, sizeof(tmpserv), "%d", ntohs(sin->sin_port));
 	if (strlen(tmpserv) > servlen)
 	    return EAI_MEMORY;
 	else
@@ -43,6 +43,8 @@ getnameinfo(const struct sockaddr *sa, socklen_t salen,
     }
     if (host) {
 	if (flags & NI_NUMERICHOST) {
+	    if (flags & NI_NAMEREQD)
+		return EAI_NONAME;
 	    if (strlen(inet_ntoa(sin->sin_addr)) >= hostlen)
 		return EAI_MEMORY;
 	    else {
@@ -59,8 +61,14 @@ getnameinfo(const struct sockaddr *sa, socklen_t salen,
 		    strcpy(host, hp->h_name);
 		    return 0;
 		}
-	    else
-		return EAI_NODATA;
+	    else if (flags & NI_NAMEREQD)
+		return EAI_NONAME;
+	    else if (strlen(inet_ntoa(sin->sin_addr)) >= hostlen)
+		return EAI_MEMORY;
+	    else {
+		strcpy(host, inet_ntoa(sin->sin_addr));
+		return 0;
+	    }
 	}
     }
     return 0;

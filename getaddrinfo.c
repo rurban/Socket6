@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.10 2001/09/19 20:48:57 ume Exp $
+ * $Id: getaddrinfo.c,v 1.12 2004/01/04 10:35:30 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -52,12 +52,12 @@ char *
 gai_strerror(int ecode)
 {
     switch (ecode) {
-    case EAI_NODATA:
-	return "no address associated with hostname.";
     case EAI_MEMORY:
 	return "memory allocation failure.";
     case EAI_FAMILY:
 	return "ai_family not supported.";
+    case EAI_NONAME:
+	return "hostname nor servname provided, or not known.";
     case EAI_SERVICE:
 	return "servname not supported for ai_socktype.";
     default:
@@ -148,7 +148,7 @@ getaddrinfo(const char *hostname, const char *servname,
 	    return EAI_MEMORY;
     }
     if (hints && hints->ai_flags & AI_NUMERICHOST)
-	return EAI_NODATA;
+	return EAI_NONAME;
     if ((hp = gethostbyname(hostname)) &&
 	hp->h_name && hp->h_name[0] && hp->h_addr_list[0]) {
 	for (i = 0; hp->h_addr_list[i]; i++) {
@@ -173,5 +173,5 @@ getaddrinfo(const char *hostname, const char *servname,
 	}
 	return 0;
     }
-    return EAI_NODATA;
+    return EAI_NONAME;
 }
