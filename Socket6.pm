@@ -1,12 +1,12 @@
 # Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
-# 
+#
 # This module is besed on perl5.005_55-v6-19990721 written by KAME
 # Project.
 #
 # Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -18,7 +18,7 @@
 # 3. Neither the name of the project nor the names of its contributors
 #    may be used to endorse or promote products derived from this software
 #    without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,16 +31,16 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.29 2004/02/21 03:21:16 ume Exp $
+# $Id: Socket6.pm,v 1.32 2004/03/24 06:42:39 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.16";
+$VERSION = "0.17";
 
 =head1 NAME
 
-Socket6 - IPv6 related part of the C socket.h defines and structure manipulators 
+Socket6 - IPv6 related part of the C socket.h defines and structure manipulators
 
 =head1 SYNOPSIS
 
@@ -124,7 +124,7 @@ Functions supplied are:
     This function will croak if it determines it has not been
     passed an IPv6 structure.
 
-=item gethostbyname2 HOSTNAME, SERVNAME 
+=item gethostbyname2 HOSTNAME, SERVNAME
 
 =item getaddrinfo NODENAME, SERVICENAME, [FAMILY, SOCKTYPE, PROTOCOL, FLAGS]
 
@@ -188,11 +188,11 @@ Functions supplied are:
     This function returns a string corresponding to the error number
     passed in as an argument.
 
-=item inaddr6_any
+=item in6addr_any
 
     This function returns the 16-octet wildcard address.
 
-=item inadd6_loopback
+=item in6add_loopback
 
     This function returns the 16-octet loopback address.
 

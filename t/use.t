@@ -27,7 +27,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: use.t,v 1.1 2003/12/29 07:59:15 ume Exp $
+# $Id: use.t,v 1.2 2004/03/23 17:07:44 ume Exp $
 
 use strict;
 use Test;
@@ -35,7 +35,7 @@ use Socket;
 BEGIN { plan tests => 3 }
 
 use Socket6; ok(1);
-my @tmp = getaddrinfo("localhost", "0", AF_INET, SOCK_STREAM, 0, 0);
+my @tmp = getaddrinfo("localhost", "", AF_INET, SOCK_STREAM, 0, 0);
 if ($#tmp >= 1) {
     ok(2);
 }

@@ -1,6 +1,6 @@
 dnl Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
 dnl All rights reserved.
-dnl 
+dnl
 dnl Redistribution and use in source and binary forms, with or without
 dnl modification, are permitted provided that the following conditions
 dnl are met:
@@ -25,7 +25,7 @@ dnl LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 dnl OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 dnl SUCH DAMAGE.
 
-dnl $Id: aclocal.m4,v 1.8 2004/02/21 03:10:37 ume Exp $
+dnl $Id: aclocal.m4,v 1.9 2004/03/23 08:05:02 ume Exp $
 
 dnl SOCKET6_CHECK_PL_SV_UNDEF(VALUE-IF-FOUND , VALUE-IF-NOT-FOUND
 dnl                           [, PERL-PATH])

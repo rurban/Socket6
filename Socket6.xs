@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.17 2004/01/04 19:10:10 ume Exp $
+ * $Id: Socket6.xs,v 1.22 2004/03/24 09:32:53 ume Exp $
  *
  * Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -10,7 +10,7 @@
  *
  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -22,7 +22,7 @@
  * 3. Neither the name of the project nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -36,9 +36,24 @@
  * SUCH DAMAGE.
  */
 
-#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
+#ifdef WIN32
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#ifndef NI_NUMERICSERV
+#error Microsoft Platform SDK (Aug. 2001) or later required.
+#endif
+const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
+const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
+#define	WSA_DECLARE					\
+	WSADATA wsaData;				\
+	int wsa = 0
+#define	WSA_STARTUP()					\
+	wsa = WSAStartup(MAKEWORD(2,2), &wsaData)
+#define	WSA_CLEANUP()					\
+	if (!wsa) WSACleanup()
+
+#else /* WIN32 */
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -50,22 +65,40 @@
 # endif
 #endif
 #include <netdb.h>
+#define	WSA_DECLARE
+#define	WSA_STARTUP()
+#define	WSA_CLEANUP()
+
+#endif /* WIN32 */
+
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
 
 #include "config.h"
 
 #ifndef HAVE_GETADDRINFO
 #include "getaddrinfo.c"
-#define	NI_MAXHOST	1025
-#define	NI_MAXSERV	32
-#define HAVE_GETADDRINFO
+#define	NI_MAXHOST		1025
+#define	NI_MAXSERV		32
+#define	HAVE_GETADDRINFO	1
 #endif
-#ifndef HAVE_GETNAMEINFO
+#ifndef	HAVE_GETNAMEINFO
 #include "getnameinfo.c"
-#define HAVE_GETNAMEINFO
+#define	HAVE_GETNAMEINFO	1
+#endif
+
+#ifndef HAVE_INET_NTOP
+#include "inet_ntop.c"
+#define	HAVE_INET_NTOP		1
+#endif
+#ifndef HAVE_INET_PTON
+#include "inet_pton.c"
+#define	HAVE_INET_PTON		1
 #endif
 
 #ifndef HAVE_PL_SV_UNDEF
-#define PL_sv_undef	sv_undef
+#define	PL_sv_undef		sv_undef
 #endif
 
 static int
@@ -319,7 +352,7 @@ gethostbyname2(host, af)
 	struct hostent *phe;
 	int count, i;
 
-	if (phe = gethostbyname2(host, af)) {
+	if ((phe = gethostbyname2(host, af)) != NULL) {
 		for (count = 0; phe->h_addr_list[count]; ++count);
 		EXTEND(sp, 4 + count);
 		PUSHs(sv_2mortal(newSVpv((char *) phe->h_name,
@@ -386,7 +419,7 @@ inet_ntop(af, address_sv)
 	CODE:
 {
 #ifdef HAVE_INET_NTOP
-	STRLEN addrlen;
+	STRLEN addrlen, alen;
 #ifdef INET6_ADDRSTRLEN
 	struct in6_addr addr;
 	char addr_str[INET6_ADDRSTRLEN];
@@ -395,7 +428,6 @@ inet_ntop(af, address_sv)
 	char addr_str[16];
 #endif
 	char * address = SvPV(address_sv,addrlen);
-	int alen;
 
 	switch (af) {
 	case AF_INET:
@@ -502,7 +534,7 @@ unpack_sockaddr_in6(sin_sv)
 		      "Socket6::unpack_sockaddr_in6",
 		      addr.sin6_family,
 		      AF_INET6);
-	} 
+	}
 	port = ntohs(addr.sin6_port);
 	ip6_address = addr.sin6_addr;
 
@@ -538,7 +570,7 @@ unpack_sockaddr_in6_all(sin_sv)
 		      "Socket6::unpack_sockaddr_in6",
 		      addr.sin6_family,
 		      AF_INET6);
-	} 
+	}
 	port = ntohs(addr.sin6_port);
 	flowinfo = ntohl(addr.sin6_flowinfo);
 	ip6_address = addr.sin6_addr;
@@ -591,18 +623,21 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 	int	flags
 	PPCODE:
 {
-#ifdef HAVE_GETADDRINFO  
+#ifdef HAVE_GETADDRINFO
 	struct addrinfo hints, * res;
 	int	err;
 	int	count;
 	char	*error;
+	WSA_DECLARE;
 
 	Zero( &hints, sizeof hints, char );
 	hints.ai_flags = flags;
 	hints.ai_family = family;
 	hints.ai_socktype = socktype;
 	hints.ai_protocol = protocol;
+	WSA_STARTUP();
 	err = getaddrinfo(*host ? host : 0, *port ? port : 0, &hints, &res);
+	WSA_CLEANUP();
 
 	if (err == 0) {
 		struct addrinfo * p;
@@ -638,13 +673,15 @@ getnameinfo(sin_sv, flags = 0)
 	int flags;
 	PPCODE:
 {
-#ifdef HAVE_GETNAMEINFO  
+#ifdef HAVE_GETNAMEINFO
 	STRLEN sockaddrlen;
 	struct sockaddr * sin = (struct sockaddr *)SvPV(sin_sv,sockaddrlen);
 	char host[NI_MAXHOST];
 	char port[NI_MAXSERV];
 	int	err;
+	WSA_DECLARE;
 
+	WSA_STARTUP();
 	if (items < 2) {
 		err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 				  port, sizeof port, 0);
@@ -662,6 +699,7 @@ getnameinfo(sin_sv, flags = 0)
 		err = getnameinfo(sin, sockaddrlen, host, sizeof host,
 				  port, sizeof port, flags);
 	}
+	WSA_CLEANUP();
 
 	if (err == 0) {
 		EXTEND(sp, 2);

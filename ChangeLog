@@ -1,3 +1,49 @@
+2004-03-24  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.17.
+
+	* Socket6.xs: Shut up signed/unsigned mismatch warning from
+	Microsoft C++.
+
+		Reported by:	"David Town" <dtown@cpan.org>
+
+	* Makefile.PL: CC is not a valid parameter for WriteMakefile().
+	Use CONFIGURE instead.
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* Socket6.pm: Correct typos (inaddr6_* -> in6addr_*).
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+2004-03-23  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Provide substitutes for systems the lack support for inet_ntop()
+	and inet_pton().
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* Add support for MSWin32.  It was tested with the following
+	configuration:
+
+	  - ActivePerl 5.8.0 (805)
+	  - Windows 2000
+	  - Microsoft IPv6 Technology Preview for Windows 2000 (not needed
+	    for XP)
+	    (http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp)
+	  - Microsoft Visual C++ v6.0
+	  - Microsoft Platform SDK February 2003 (must have at least
+	    August 2001)
+	    (http://www.microsoft.com/msdownload/platformsdk/sdkupdate/downlevel.htm)
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
+	* t/use.t: Pass an empty string as the SERVICENAME to
+	getaddrinfo().  MSWin32's getaddrinfo() doesn't like "0" as a
+	numeric servname.
+
+		Submitted by:	"David Town" <dtown@cpan.org>
+
 2004-02-21  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.16.
@@ -97,7 +143,7 @@
 		- Fix typo in sample code.
 		  Reported by:	Matsumura Naoki <mat@pfu.co.jp>
 		- Bump version number to 0.08.
-	
+
 2000-05-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.07.

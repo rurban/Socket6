@@ -1,7 +1,7 @@
 /*
- * $Id: acconfig.h,v 1.5 2001/09/17 16:06:37 ume Exp $
+ * $Id: acconfig.h,v 1.6 2004/03/23 08:01:37 ume Exp $
  *
- * Copyright (C) 2000, 2001 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * 3. Neither the name of the project nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
