@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.9 2001/09/17 15:21:49 ume Exp $
+ * $Id: getaddrinfo.c,v 1.10 2001/09/19 20:48:57 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>
@@ -130,15 +130,11 @@ getaddrinfo(const char *hostname, const char *servname,
 	    port = se->s_port;
 	}
     }
-    if (hints && hints->ai_flags & AI_PASSIVE) {
-	*res = malloc_ai(port, htonl(0x00000000), socktype, proto);
-	if (*res)
-	    return 0;
-	else
-	    return EAI_MEMORY;
-    }
     if (!hostname) {
-	*res = malloc_ai(port, htonl(0x7f000001), socktype, proto);
+	if (hints && hints->ai_flags & AI_PASSIVE)
+	    *res = malloc_ai(port, htonl(0x00000000), socktype, proto);
+	else
+	    *res = malloc_ai(port, htonl(0x7f000001), socktype, proto);
 	if (*res)
 	    return 0;
 	else

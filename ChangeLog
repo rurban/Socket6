@@ -1,3 +1,16 @@
+2003-10-28  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Bump version number to 0.12.
+
+	* Socket6.pm: Mention that getipnodeby*() was deprecated in
+	RFC3493.
+
+2001-09-20  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* getaddrinfo.c (getaddrinfo): Correct AI_PASSIVE parsing bug.
+
+	Reported by:	Rob Siemborski <rjs3@andrew.cmu.edu>
+
 2001-09-18  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.11.

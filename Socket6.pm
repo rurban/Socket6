@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.22 2001/09/17 16:06:37 ume Exp $
+# $Id: Socket6.pm,v 1.24 2003/10/28 02:54:07 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.11";
+$VERSION = "0.12";
 
 =head1 NAME
 
@@ -166,6 +166,7 @@ Functions supplied are:
     The arguments FAMILY and FLAGS are optional.
     Note: This function does not handle IPv6 scope identifiers,
     and should be used with care.
+    And, this function was deprecated in RFC3493.
     The getnameinfo function should be used instead.
 
 =item getipnodebyaddr FAMILY, ADDRESS
@@ -179,6 +180,7 @@ Functions supplied are:
 
     Note: This function does not handle IPv6 scope identifiers,
     and should be used with care.
+    And, this function was deprecated in RFC3493.
     The getaddrinfo function should be used instead.
 
 =item gai_strerror ERROR_NUMBER
