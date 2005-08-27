@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.23 2005/03/28 08:57:03 ume Exp $
+ * $Id: Socket6.xs,v 1.24 2005/08/27 16:53:11 ume Exp $
  *
  * Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -509,7 +509,7 @@ pack_sockaddr_in6_all(port,flowinfo,ip6_address,scope_id)
 	sin.sin6_flowinfo = htonl(flowinfo);
 	Copy( ip6_address, &sin.sin6_addr, sizeof sin.sin6_addr, char );
 #ifdef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
-	sin.sin6_scope_id = htonl(scope_id);
+	sin.sin6_scope_id = scope_id;
 #endif
 
 	ST(0) = sv_2mortal(newSVpv((char *)&sin, sizeof sin));
@@ -581,7 +581,7 @@ unpack_sockaddr_in6_all(sin_sv)
 	flowinfo = ntohl(addr.sin6_flowinfo);
 	ip6_address = addr.sin6_addr;
 #ifdef HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID
-	scope_id = ntohl(addr.sin6_scope_id);
+	scope_id = addr.sin6_scope_id;
 #else
 	scope_id = 0;
 #endif

@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.6 2004/03/24 08:37:18 ume Exp $
+# $Id: Makefile.PL,v 1.6 2005/08/27 16:23:20 ume Exp $
 
 use ExtUtils::MakeMaker;
 

@@ -1,3 +1,13 @@
+2005-08-28  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.19.
+
+	* Socket6.xs: the "sin6_scope_id" field of the "sockaddr_in6"
+	structure is expected to passed and is returned in host byte
+	order.
+
+	Submitted by:	"Town, David" <David.Town@marconi.com>
+
 2005-03-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.18.

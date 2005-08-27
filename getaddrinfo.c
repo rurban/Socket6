@@ -1,6 +1,6 @@
 /*
  * Mar  8, 2000 by Hajimu UMEMOTO <ume@mahoroba.org>
- * $Id: getaddrinfo.c,v 1.13 2005/03/28 08:57:03 ume Exp $
+ * $Id: getaddrinfo.c,v 1.13 2005/08/27 16:33:10 ume Exp $
  *
  * This module is besed on ssh-1.2.27-IPv6-1.5 written by
  * KIKUCHI Takahiro <kick@kyoto.wide.ad.jp>

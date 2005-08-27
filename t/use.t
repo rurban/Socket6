@@ -27,7 +27,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: use.t,v 1.2 2004/03/23 17:07:44 ume Exp $
+# $Id: use.t,v 1.2 2005/08/27 16:10:54 ume Exp $
 
 use strict;
 use Test;
