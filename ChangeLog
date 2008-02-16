@@ -1,3 +1,28 @@
+2008-02-16  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.20.
+
+	* Socket6.pm: Make the AF_INET6 and PF_INET6 exports optional.
+	They are exported from Socket on 5.10.0, and it contlicts with
+	Socket6.
+
+	PR:		http://rt.cpan.org/Public/Bug/Display.html?id=32362
+	Reported by:	"Shlomi Fish via RT" <bug-Socket6@rt.cpan.org>
+	Submitted by:	"KONDOU, Kazuhiro" <kazuhiro@alib.jp>
+
+2008-01-27  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.xs, Socket6.pm: Make getaddrinfo() return the string
+	error or the numeric value according to the context.
+	Make getnameinfo() return error value.
+	Export the EAI_* error constants.
+
+	Submitted by:	Paul LeoNerd Evans <leonerd@leonerd.org.uk>
+
+	* Socket6.xs: FreeBSD 7 and later don't have KAME IPsec anymore.
+
+	* Socket6.xs: gai_strerror() returns `const char *'.
+
 2005-08-28  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.19.

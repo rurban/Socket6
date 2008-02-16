@@ -1,6 +1,6 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.24 2005/08/27 16:53:11 ume Exp $
+ * $Id: Socket6.xs,v 1.27 2008/01/27 08:59:11 ume Exp $
  *
  * Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
@@ -59,8 +59,11 @@ const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
 #include <sys/socket.h>
 #include <netinet/in.h>
 #ifdef __KAME__
+# include <sys/param.h>
 # include <net/route.h>
-# ifndef __OpenBSD__
+# if defined(__FreeBSD__) && __FreeBSD_version >= 700048
+#  include <netipsec/ipsec.h>
+# elif !defined(__OpenBSD__)
 #  include <netinet6/ipsec.h>
 # endif
 #endif
@@ -177,6 +180,86 @@ constant(char *name, int arg)
 	if (strEQ(name, "AI_V4MAPPED_CFG"))
 #ifdef AI_V4MAPPED_CFG
 	    return AI_V4MAPPED_CFG;
+#else
+	    goto not_there;
+#endif
+	break;
+    case 'E':
+	if (strEQ(name, "EAI_ADDRFAMILY"))
+#ifdef EAI_ADDRFAMILY
+	    return EAI_ADDRFAMILY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_AGAIN"))
+#ifdef EAI_AGAIN
+	    return EAI_AGAIN;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_BADFLAGS"))
+#ifdef EAI_BADFLAGS
+	    return EAI_BADFLAGS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_FAIL"))
+#ifdef EAI_FAIL
+	    return EAI_FAIL;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_FAMILY"))
+#ifdef EAI_FAMILY
+	    return EAI_FAMILY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_MEMORY"))
+#ifdef EAI_MEMORY
+	    return EAI_MEMORY;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_NODATA"))
+#ifdef EAI_NODATA
+	    return EAI_NODATA;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_NONAME"))
+#ifdef EAI_NONAME
+	    return EAI_NONAME;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SERVICE"))
+#ifdef EAI_SERVICE
+	    return EAI_SERVICE;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SOCKTYPE"))
+#ifdef EAI_SOCKTYPE
+	    return EAI_SOCKTYPE;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_SYSTEM"))
+#ifdef EAI_SYSTEM
+	    return EAI_SYSTEM;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_BADHINTS"))
+#ifdef EAI_BADHINTS
+	    return EAI_BADHINTS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "EAI_PROTOCOL"))
+#ifdef EAI_PROTOCOL
+	    return EAI_PROTOCOL;
 #else
 	    goto not_there;
 #endif
@@ -633,7 +716,7 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 	struct addrinfo hints, * res;
 	int	err;
 	int	count;
-	char	*error;
+	const char	*error;
 	WSA_DECLARE;
 
 	Zero( &hints, sizeof hints, char );
@@ -665,8 +748,12 @@ getaddrinfo(host,port,family=0,socktype=0,protocol=0,flags=0)
 		}
 		freeaddrinfo(res);
 	} else  {
+		SV *error_sv = sv_newmortal();
+		SvUPGRADE(error_sv, SVt_PVNV);
 		error = gai_strerror(err);
-		PUSHs(sv_2mortal(newSVpv(error, strlen(error))));
+		sv_setpv(error_sv, error);
+		SvIV_set(error_sv, err); SvIOK_on(error_sv);
+		PUSHs(error_sv);
 	}
 #else
 	ST(0) = (SV *) not_here("getaddrinfo");
@@ -685,6 +772,7 @@ getnameinfo(sin_sv, flags = 0)
 	char host[NI_MAXHOST];
 	char port[NI_MAXSERV];
 	int	err;
+	const char	*error;
 	WSA_DECLARE;
 
 	WSA_STARTUP();
@@ -711,6 +799,13 @@ getnameinfo(sin_sv, flags = 0)
 		EXTEND(sp, 2);
 		PUSHs(sv_2mortal(newSVpv(host, strlen(host))));
 		PUSHs(sv_2mortal(newSVpv(port, strlen(port))));
+	} else  {
+		SV *error_sv = sv_newmortal();
+		SvUPGRADE(error_sv, SVt_PVNV);
+		error = gai_strerror(err);
+		sv_setpv(error_sv, error);
+		SvIV_set(error_sv, err); SvIOK_on(error_sv);
+		PUSHs(error_sv);
 	}
 #else
 	ST(0) = (SV *) not_here("getnameinfo");
@@ -721,7 +816,7 @@ char *
 gai_strerror(errcode = 0)
 	int	errcode;
 	CODE:
-	RETVAL = gai_strerror(errcode);
+	RETVAL = (char *)gai_strerror(errcode);
 	OUTPUT:
 	RETVAL
 

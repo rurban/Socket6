@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.36 2005/08/27 16:54:55 ume Exp $
+# $Id: Socket6.pm,v 1.39 2008/02/16 03:51:35 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.19";
+$VERSION = "0.20";
 
 =head1 NAME
 
@@ -145,14 +145,21 @@ Functions supplied are:
 
     This function will croak if it determines it has not been
     passed an IPv6 structure.
-    If the function returns an error value,
-    the string version of that error will be returned as a single scalar.
+
+    If the lookup is unsuccessful, the function returns a single scalar.
+    This will contain the string version of that error in string context,
+    and the numeric value in numeric context.
 
 =item getnameinfo NAME, [FLAGS]
 
-    This function takes a socket address structure and returns either
-    a node or service name.
+    This function takes a socket address structure. If successful, it returns
+    two strings containing the node name and service name.
+
     The optional FLAGS argument controls what kind of lookup is performed.
+
+    If the lookup is unsuccessful, the function returns a single scalar.
+    This will contain the string version of that error in string context,
+    and the numeric value in numeric context.
 
 =item getipnodebyname HOST, [FAMILY, FLAGS]
 
@@ -213,7 +220,6 @@ require DynaLoader;
 	gethostbyname2 getaddrinfo getnameinfo
 	in6addr_any in6addr_loopback
 	gai_strerror getipnodebyname getipnodebyaddr
-	AF_INET6
 	AI_ADDRCONFIG
 	AI_ALL
 	AI_CANONNAME
@@ -224,6 +230,19 @@ require DynaLoader;
 	AI_PASSIVE
 	AI_V4MAPPED
 	AI_V4MAPPED_CFG
+	EAI_ADDRFAMILY
+	EAI_AGAIN
+	EAI_BADFLAGS
+	EAI_FAIL
+	EAI_FAMILY
+	EAI_MEMORY
+	EAI_NODATA
+	EAI_NONAME
+	EAI_SERVICE
+	EAI_SOCKTYPE
+	EAI_SYSTEM
+	EAI_BADHINTS
+	EAI_PROTOCOL
 	IP_AUTH_TRANS_LEVEL
 	IP_AUTH_NETWORK_LEVEL
 	IP_ESP_TRANS_LEVEL
@@ -247,8 +266,9 @@ require DynaLoader;
 	NI_NUMERICSERV
 	NI_DGRAM
 	NI_WITHSCOPEID
-	PF_INET6
 );
+push @EXPORT, qw(AF_INET6) unless defined Socket::AF_INET6;
+push @EXPORT, qw(PF_INET6) unless defined Socket::PF_INET6;
 
 %EXPORT_TAGS = (
     all     => [@EXPORT],
