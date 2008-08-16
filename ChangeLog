@@ -1,3 +1,16 @@
+2008-08-17  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.21.
+
+	* Socket6.xs: Make it buildable on the following environment by
+	defining WINVER as 0x0501:
+		- Windows XP SP3
+		- ActivePerl-5.10.0.1003-MSWin32-x86-285500
+		- MinGW-5.1.4
+		- nmake 9.00.21022.08 (shipped with VisualStudio 2008 Express)
+
+	Submitted by:	"IWAMURO Motonori" <vmi@nifty.com>
+
 2008-02-16  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.20.

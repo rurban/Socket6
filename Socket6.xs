@@ -1,8 +1,8 @@
 /*
  * Socket6.xs
- * $Id: Socket6.xs,v 1.27 2008/01/27 08:59:11 ume Exp $
+ * $Id: Socket6.xs,v 1.29 2008/08/16 16:47:00 ume Exp $
  *
- * Copyright (C) 2000-2005 Hajimu UMEMOTO <ume@mahoroba.org>.
+ * Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
  * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
@@ -38,6 +38,7 @@
 
 #ifdef WIN32
 
+#define	WINVER		0x0501
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #ifndef NI_NUMERICSERV
