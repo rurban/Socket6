@@ -1,3 +1,14 @@
+2008-08-18  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.22.
+
+	* Socket6.pm: Make AF_INET6 check actually work.
+
+	Submitted by:	Tatsuya Noda <topia@clovery.jp>
+
+	* Makefile.PL: Make sure to include config.pl in current
+	directory.
+
 2008-08-17  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.21.

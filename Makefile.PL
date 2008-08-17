@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2004 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.6 2005/08/27 16:23:20 ume Exp $
+# $Id: Makefile.PL,v 1.7 2008/08/17 17:08:19 ume Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -38,7 +38,7 @@ if ($^O eq 'MSWin32') {
     system($cmd);
 }
 
-require 'config.pl';
+require './config.pl';
 
 WriteMakefile(
     NAME	 => 'Socket6',

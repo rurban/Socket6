@@ -31,12 +31,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.41 2008/08/16 16:47:00 ume Exp $
+# $Id: Socket6.pm,v 1.42 2008/08/17 18:25:07 ume Exp $
 
 package Socket6;
 
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.21";
+$VERSION = "0.22";
 
 =head1 NAME
 
@@ -267,8 +267,8 @@ require DynaLoader;
 	NI_DGRAM
 	NI_WITHSCOPEID
 );
-push @EXPORT, qw(AF_INET6) unless defined Socket::AF_INET6;
-push @EXPORT, qw(PF_INET6) unless defined Socket::PF_INET6;
+push @EXPORT, qw(AF_INET6) unless defined eval {Socket::AF_INET6()};
+push @EXPORT, qw(PF_INET6) unless defined eval {Socket::PF_INET6()};
 
 %EXPORT_TAGS = (
     all     => [@EXPORT],
