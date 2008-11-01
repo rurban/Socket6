@@ -1,4 +1,37 @@
+2008-11-02  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.23.
+
+	* Makefile.PL (configure_mswin32): Added a conditional #define for
+	HAVE_INET_(PTON|NTOP) to make the module.
+	Change was necessary because the SDK for Vista now includes
+	inet_(pton|ntop) in ws2tcpip.h
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Makefile.PL (configure_mswin32): Added a line to #define
+	HAVE_SOCKLEN_T since it is defined for MSWin32
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Socket6.pm: Added @EXPORT_OK to export AF_INET6 and PF_INET6 if
+	requested.  This allows the use of the Socke6 module without
+	having to perform the same conditional check that was added to
+	avoid conflicts with the Socket module default exports (i.e. use
+	Socket6 qw(AF_INET6 inet_pton inet_ntop); )
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
+	* Socket6.pm (AUTOLOAD): Explicitly set $! = 0 before calling
+	constant().  This should not be required since errno was being set
+	to 0 in the C function, but Perl 5.10.0 Win32 Vista needed this to
+	be done or all constants reported unsupported.
+
+	Submitted by:	"David M. Town" <dtown@cpan.org>
+
 2008-08-18  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Use strict environment.
 
 	* Socket6.pm: Bump version number to 0.22.
 

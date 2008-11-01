@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.7 2008/08/17 17:08:19 ume Exp $
+# $Id: Makefile.PL,v 1.8 2008/11/01 19:01:10 ume Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -83,6 +83,14 @@ sub configure_mswin32
 	    print(OUT "#define HAVE_GETNAMEINFO 1\n");
 	} elsif (/HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID/) {
 	    print(OUT "#define HAVE_SOCKADDR_IN6_SIN6_SCOPE_ID 1\n");
+        } elsif (/HAVE_INET_(PTON|NTOP)/) {
+	    print(OUT "#if (NTDDI_VERSION >= NTDDI_LONGHORN)\n");
+	    print(OUT "  #define HAVE_INET_$1 1\n");
+	    print(OUT "#else\n");
+	    print(OUT "  #undef HAVE_INET_$1\n");
+	    print(OUT "#endif\n");
+	} elsif (/HAVE_SOCKLEN_T/) {
+	    print(OUT "#define HAVE_SOCKLEN_T 1\n");
 	} else {
 	    print OUT;
 	}

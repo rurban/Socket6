@@ -31,12 +31,13 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Socket6.pm,v 1.42 2008/08/17 18:25:07 ume Exp $
+# $Id: Socket6.pm,v 1.45 2008/11/01 19:08:39 ume Exp $
 
 package Socket6;
 
-use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS);
-$VERSION = "0.22";
+use strict;
+use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $AUTOLOAD);
+$VERSION = "0.23";
 
 =head1 NAME
 
@@ -211,9 +212,8 @@ Functions supplied are:
 
 use Carp;
 
-require Exporter;
-require DynaLoader;
-@ISA = qw(Exporter DynaLoader);
+use base qw(Exporter DynaLoader);
+
 @EXPORT = qw(
 	inet_pton inet_ntop pack_sockaddr_in6 pack_sockaddr_in6_all
 	unpack_sockaddr_in6 unpack_sockaddr_in6_all sockaddr_in6
@@ -270,6 +270,8 @@ require DynaLoader;
 push @EXPORT, qw(AF_INET6) unless defined eval {Socket::AF_INET6()};
 push @EXPORT, qw(PF_INET6) unless defined eval {Socket::PF_INET6()};
 
+@EXPORT_OK = qw(AF_INET6 PF_INET6);
+
 %EXPORT_TAGS = (
     all     => [@EXPORT],
 );
@@ -287,9 +289,9 @@ sub sockaddr_in6 {
 sub AUTOLOAD {
     my($constname);
     ($constname = $AUTOLOAD) =~ s/.*:://o;
+    $! = 0;
     my $val = constant($constname, @_ ? $_[0] : 0);
     if ($! != 0) {
-	my ($pack, $file, $line) = caller;
 	croak "Your vendor has not defined Socket macro $constname, used";
     }
     eval "sub $AUTOLOAD { $val }";
