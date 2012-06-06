@@ -37,7 +37,7 @@ package Socket6;
 
 use strict;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $AUTOLOAD);
-$VERSION = "0.23";
+$VERSION = "0.23_01";
 
 =head1 NAME
 

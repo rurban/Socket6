@@ -1,3 +1,22 @@
+2012-06-06 rurban
+
+	git repo at https://github.com/rurban/Socket6
+
+	* Socket6.pm: Bump version number to 0.23_01.
+
+	* Makefile.PL: Fixed [cpan #77665] pass perl cc and ccflags to configure
+
+	Submitted by:	rurban@cpan.org
+
+	* Makefile.PL (configure_mswin32): Fixed [cpan #65710]
+	undefined ref to inet_ntop,inet_pton on Windows XP.
+
+	Submitted by:	APOCAL@cpan.org
+
+	* t/use.t: Fixed [cpan #75211] test redefinition warnings
+
+	Submitted by:	Manoj Kumar <mkmetw@hotmail.com>
+
 2008-11-02  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.23.
