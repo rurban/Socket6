@@ -31,7 +31,7 @@
 
 use strict;
 use Test;
-use Socket;
+use Socket qw(AF_INET SOCK_STREAM);
 BEGIN { plan tests => 3 }
 
 use Socket6; ok(1);
