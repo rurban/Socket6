@@ -73,6 +73,10 @@ sub configure_mswin32
     open(IN, '<config.h.in') || die "Failed to open file 'config.h.in' [$!]";
     open(OUT, '>config.h')   || die "Failed to open file 'config.h' [$!]";
 
+    print(OUT "#ifndef NTDDI_LONGHORN\n");
+    print(OUT "#  define NTDDI_LONGHORN 0x06000000\n");
+    print(OUT "#endif\n");
+
     while (<IN>) {
 	if (/HAVE_PL_SV_UNDEF/) {
 	    print(OUT "#define HAVE_PL_SV_UNDEF 1\n");
