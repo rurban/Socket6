@@ -28,12 +28,13 @@
 # $Id: Makefile.PL,v 1.8 2008/11/01 19:01:10 ume Exp $
 
 use ExtUtils::MakeMaker;
+use Config;
 
 if ($^O eq 'MSWin32') {
     configure_mswin32();
 } else {
     my $path_perl = ($^X =~ m!^/!o) ? $^X : `which $^X`;
-    my $cmd = './configure';
+    my $cmd = "CC='$Config{cc}' CFLAGS='$Config{ccflags}' ./configure";
     $cmd .= " --with-perl=$path_perl" if ($path_perl);
     system($cmd);
 }
@@ -53,8 +54,6 @@ WriteMakefile(
 
 sub configure_mswin32
 {
-    require Config;
-
     open(IN, '<config.pl.in') || die "Failed to open file 'config.pl.in' [$!]";
     open(OUT, '>config.pl')   || die "Failed to open file 'config.pl' [$!]";
 
