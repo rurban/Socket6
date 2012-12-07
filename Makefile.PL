@@ -25,15 +25,16 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.8 2008/11/01 19:01:10 ume Exp $
+# $Id: Makefile.PL,v 1.10 2013/12/07 18:42:12 ume Exp $
 
+use Config;
 use ExtUtils::MakeMaker;
 
 if ($^O eq 'MSWin32') {
     configure_mswin32();
 } else {
     my $path_perl = ($^X =~ m!^/!o) ? $^X : `which $^X`;
-    my $cmd = './configure';
+    my $cmd = "CC='$Config{cc}' CFLAGS='$Config{ccflags}' ./configure";
     $cmd .= " --with-perl=$path_perl" if ($path_perl);
     system($cmd);
 }
@@ -53,8 +54,6 @@ WriteMakefile(
 
 sub configure_mswin32
 {
-    require Config;
-
     open(IN, '<config.pl.in') || die "Failed to open file 'config.pl.in' [$!]";
     open(OUT, '>config.pl')   || die "Failed to open file 'config.pl' [$!]";
 
@@ -73,6 +72,10 @@ sub configure_mswin32
 
     open(IN, '<config.h.in') || die "Failed to open file 'config.h.in' [$!]";
     open(OUT, '>config.h')   || die "Failed to open file 'config.h' [$!]";
+
+    print(OUT "#ifndef NTDDI_LONGHORN\n");
+    print(OUT "#  define NTDDI_LONGHORN 0x06000000\n");
+    print(OUT "#endif\n");
 
     while (<IN>) {
 	if (/HAVE_PL_SV_UNDEF/) {
