@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
+# Copyright (C) 2000-2013 Hajimu UMEMOTO <ume@mahoroba.org>.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.10 2013/12/07 18:42:12 ume Exp $
+# $Id: Makefile.PL,v 1.12 2013/12/08 17:21:56 ume Exp $
 
 use Config;
 use ExtUtils::MakeMaker;
@@ -44,7 +44,6 @@ require './config.pl';
 WriteMakefile(
     NAME	 => 'Socket6',
     VERSION_FROM => 'Socket6.pm',
-    MAN3PODS 	 => {},			# Pods will be built by installman.
     XSPROTOARG	 => '-noprototypes',	# XXX remove later?
     PM		 => {'Socket6.pm' => '$(INST_LIBDIR)/Socket6.pm'},
     CONFIGURE	 => sub { { CC => "${cc}" } },

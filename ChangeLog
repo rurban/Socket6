@@ -1,3 +1,17 @@
+2013-12-09  Hajimu UMEMOTO  <ume@mahoroba.org>
+
+	* Socket6.pm: Bump version number to 0.25.
+
+	* Makefile.PL: Install manpage. [cpan #66811]
+
+	Submitted by:	gavin@openfusion.com.au
+
+	* Socket6.pm: Fix typo. [cpan #86346]
+
+	Submitted by:	dsteinbrunner@pobox.com
+
+	* Socket6.pm: Fix typo. [cpan #71617]
+
 2013-12-08  Hajimu UMEMOTO  <ume@mahoroba.org>
 
 	* Socket6.pm: Bump version number to 0.24.
