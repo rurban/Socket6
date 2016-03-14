@@ -41,14 +41,20 @@ static const char *inet_ntop6(const unsigned char *src, char *dst,
  *      Paul Vixie, 1996.
  */
 const char *
-inet_ntop(int af, const void *src, char *dst, size_t size)
+inet_ntop(int af, const void *src, char *dst,
+# ifdef __APPLE__
+           socklen_t size
+# else
+           size_t size
+# endif
+          )
 {
         switch (af) {
         case AF_INET:
-                return (inet_ntop4(src, dst, size));
+          return (inet_ntop4(src, dst, (size_t)size));
 #ifdef AF_INET6
         case AF_INET6:
-                return (inet_ntop6(src, dst, size));
+          return (inet_ntop6(src, dst, (size_t)size));
 #endif
         default:
                 errno = EAFNOSUPPORT;

@@ -92,10 +92,11 @@ const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
 #define	HAVE_GETNAMEINFO	1
 #endif
 
-#ifndef HAVE_INET_NTOP
+#if !defined(HAVE_INET_NTOP) | !defined(CAN_INET_NTOP)
 #include "inet_ntop.c"
 #define	HAVE_INET_NTOP		1
 #endif
+
 #ifndef HAVE_INET_PTON
 #include "inet_pton.c"
 #define	HAVE_INET_PTON		1
@@ -648,7 +649,7 @@ inet_ntop(af, address_sv)
 		      addrlen, alen);
 	}
 
-	Copy( address, &addr, sizeof addr, char );
+	Copy( address, &addr, alen, char );
 	addr_str[0] = 0;
 	inet_ntop(af, &addr, addr_str, sizeof addr_str);
 

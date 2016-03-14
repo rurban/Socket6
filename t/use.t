@@ -31,8 +31,8 @@
 
 use strict;
 use Test;
-use Socket qw(AF_INET SOCK_STREAM);
-BEGIN { plan tests => 3 }
+use Socket qw(AF_INET AF_INET6 SOCK_STREAM);
+BEGIN { plan tests => 9 }
 
 use Socket6; ok(1);
 my @tmp = getaddrinfo("localhost", "", AF_INET, SOCK_STREAM, 0, 0);
@@ -44,5 +44,10 @@ my($addr, $port) = getnameinfo($sin, NI_NUMERICHOST | NI_NUMERICSERV);
 if ($addr eq "127.0.0.1" && $port eq "0") {
     ok(3);
 }
-exit;
-__END__
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "::")), "::");
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "::21")), "::21") # this fails under darwin
+  or print "# ",unpack("H*", inet_pton(AF_INET6, "::21")),"\n";
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "43::")), "43::");
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "1:2:3:4:5:6:7::")), "1:2:3:4:5:6:7:0");
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "1::8")), "1::8");
+ok(inet_ntop(AF_INET6, inet_pton(AF_INET6, "FF00::FFFF")), "ff00::ffff");
