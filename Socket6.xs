@@ -368,6 +368,114 @@ constant(char *name, int arg)
 #else
 	    goto not_there;
 #endif
+	if (strEQ(name, "IPV6_ADDRFORM"))
+#ifdef IPV6_ADDRFORM
+	    return IPV6_ADDRFORM;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_DROP_MEMBERSHIP"))
+#ifdef IPV6_DROP_MEMBERSHIP
+	    return IPV6_DROP_MEMBERSHIP;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_MTU"))
+#ifdef IPV6_MTU
+	    return IPV6_MTU;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_MTU_DISCOVER"))
+#ifdef IPV6_MTU_DISCOVER
+	    return IPV6_MTU_DISCOVER;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_MULTICAST_HOPS"))
+#ifdef IPV6_MULTICAST_HOPS
+	    return IPV6_MULTICAST_HOPS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_MULTICAST_IF"))
+#ifdef IPV6_MULTICAST_IF
+	    return IPV6_MULTICAST_IF;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_MULTICAST_LOOP"))
+#ifdef IPV6_MULTICAST_LOOP
+	    return IPV6_MULTICAST_LOOP;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_PKTINFO"))
+#ifdef IPV6_PKTINFO
+	    return IPV6_PKTINFO;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_RTHDR"))
+#ifdef IPV6_RTHDR
+	    return IPV6_RTHDR;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_AUTHHDR"))
+#ifdef IPV6_AUTHHDR
+	    return IPV6_AUTHHDR;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_DSTOPS"))
+#ifdef IPV6_DSTOPS
+	    return IPV6_DSTOPS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_HOPOPTS"))
+#ifdef IPV6_HOPOPTS
+	    return IPV6_HOPOPTS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_FLOWINFO"))
+#ifdef IPV6_FLOWINFO
+	    return IPV6_FLOWINFO;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_HOPLIMIT"))
+#ifdef IPV6_HOPLIMIT
+	    return IPV6_HOPLIMIT;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_RECVERR"))
+#ifdef IPV6_RECVERR
+	    return IPV6_RECVERR;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_ROUTER_ALERT"))
+#ifdef IPV6_ROUTER_ALERT
+	    return IPV6_ROUTER_ALERT;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_UNICAST_HOPS"))
+#ifdef IPV6_UNICAST_HOPS
+	    return IPV6_UNICAST_HOPS;
+#else
+	    goto not_there;
+#endif
+	if (strEQ(name, "IPV6_V6ONLY"))
+#ifdef IPV6_V6ONLY
+	    return IPV6_V6ONLY;
+#else
+	    goto not_there;
+#endif
 	break;
     case 'N':
 	if (strEQ(name, "NI_NOFQDN"))
