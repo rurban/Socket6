@@ -42,7 +42,7 @@ static const char *inet_ntop6(const unsigned char *src, char *dst,
  */
 const char *
 inet_ntop(int af, const void *src, char *dst,
-# ifdef __APPLE__
+# if defined(HAVE_SOCKLEN_T)
            socklen_t size
 # else
            size_t size
