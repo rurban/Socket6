@@ -63,6 +63,7 @@ if test $ac_cv_lib_inet6_getaddrinfo = yes; then
 	INET6LIBS="-L$ipv6_cv_dir/lib -linet6"
 fi
 
+IPv6_CHECK_INET_NTOP()
 IPv6_CHECK_SA_LEN()
 IPv6_CHECK_SIN6_SCOPE_ID()
 IPv6_CHECK_SOCKLEN_T()

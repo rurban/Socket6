@@ -81,6 +81,10 @@ const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
 
 #include "config.h"
 
+#if defined(HAVE_INET_NTOP) && !defined(CAN_INET_NTOP)
+#undef HAVE_INET_NTOP
+#endif
+
 #ifndef HAVE_GETADDRINFO
 #include "getaddrinfo.c"
 #define	NI_MAXHOST		1025
@@ -540,7 +544,7 @@ inet_ntop(af, address_sv)
 		      addrlen, alen);
 	}
 
-	Copy( address, &addr, sizeof addr, char );
+	Copy( address, &addr, alen, char );
 	addr_str[0] = 0;
 	inet_ntop(af, &addr, addr_str, sizeof addr_str);
 
