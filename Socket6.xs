@@ -5,7 +5,7 @@
  * Copyright (C) 2000-2008 Hajimu UMEMOTO <ume@mahoroba.org>.
  * All rights reserved.
  *
- * This moduled is besed on perl5.005_55-v6-19990721 written by KAME
+ * This moduled is based on perl5.005_55-v6-19990721 written by KAME
  * Project.
  *
  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
@@ -92,7 +92,7 @@ const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
 #define	HAVE_GETNAMEINFO	1
 #endif
 
-#ifndef HAVE_INET_NTOP
+#if !defined(HAVE_INET_NTOP) || !defined(CAN_INET_NTOP)
 #include "inet_ntop.c"
 #define	HAVE_INET_NTOP		1
 #endif
