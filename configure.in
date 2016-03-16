@@ -59,6 +59,13 @@ IPv6_CHECK_FUNC(getipnodebyaddr)
 IPv6_CHECK_FUNC(inet_pton)
 IPv6_CHECK_FUNC(inet_ntop)
 
+if test $ipv6_cv_inet_ntop = yes; then
+  IPv6_CHECK_INET_NTOP()
+  if test $ipv6_cv_can_inet_ntop = no; then
+    ipv6_cv_inet_ntop=no
+  fi
+fi
+
 if test $ac_cv_lib_inet6_getaddrinfo = yes; then
 	INET6LIBS="-L$ipv6_cv_dir/lib -linet6"
 fi

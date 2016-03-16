@@ -183,3 +183,34 @@ else
   ifelse([$2], , :, [$2])
 fi
 AC_MSG_RESULT($ipv6_cv_socklen_t)])
+dnl
+dnl Check if darwin inet_ntop is broken
+AC_DEFUN([IPv6_CHECK_INET_NTOP], [
+AC_MSG_CHECKING(for working inet_ntop)
+AC_CACHE_VAL(ipv6_cv_can_inet_ntop, [dnl
+AC_RUN_IFELSE([AC_LANG_SOURCE[
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+int
+main() {
+  static struct in6_addr addr;
+  static char str[INET6_ADDRSTRLEN];
+
+  addr.__u6_addr.__u6_addr8[15] = 0x21;
+  inet_ntop(AF_INET6, &addr, str, sizeof(str));
+  if (strcmp(str,"::21"))
+    exit(1);
+}
+]], [ipv6_cv_can_inet_ntop=yes], [ipv6_cv_can_inet_ntop=no])])dnl
+dnl
+if test $ipv6_cv_can_inet_ntop = yes; then
+  ifelse([$1], , AC_DEFINE(CAN_INET_NTOP,[1],[Do we have a working inet_ntop?]), [$1])
+else
+  ifelse([$2], , :, [$2])
+fi
+AC_MSG_RESULT($ipv6_cv_can_inet_ntop)])

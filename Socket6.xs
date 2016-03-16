@@ -540,7 +540,7 @@ inet_ntop(af, address_sv)
 		      addrlen, alen);
 	}
 
-	Copy( address, &addr, sizeof addr, char );
+	Copy( address, &addr, alen, char );
 	addr_str[0] = 0;
 	inet_ntop(af, &addr, addr_str, sizeof addr_str);
 
